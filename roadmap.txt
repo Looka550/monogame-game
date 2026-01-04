@@ -1,0 +1,14 @@
+1. make gameobject graph traversal (parent + child)
+2. make mouseclicked and buttonclicked functions and call them on every gameobject
+3. resize system:
+    // GAME WORLD
+    _spriteBatch.Begin();
+    DrawWorld();
+    _spriteBatch.End();
+
+    // UI
+    _spriteBatch.Begin(transformMatrix: uiScaleMatrix);
+    DrawUI();
+    _spriteBatch.End();
+
+4. 

@@ -1,0 +1,13 @@
+CREATE NEW FILE:
+dotnet new mgdesktopgl -n myGame
+dotnet new sln -n myGame
+dotnet sln add .\myGame\myGame.csproj
+
+OPEN SOLUTION:
+ctrl + shift + p
+>Open SOLUTION
+(bottom left - solution explorer)
+
+OPEN IN MGCB:
+right click content.mgcb -> open with mgcb editor
+
