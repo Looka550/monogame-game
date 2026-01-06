@@ -36,3 +36,4 @@ C:\Users\Luka\Desktop\TINR\project\myGame\obj\Debug\net9.0\myGame.pdb
 C:\Users\Luka\Desktop\TINR\project\myGame\obj\Debug\net9.0\myGame.genruntimeconfig.cache
 C:\Users\Luka\Desktop\TINR\project\myGame\obj\Debug\net9.0\ref\myGame.dll
 C:\Users\Luka\Desktop\TINR\project\myGame\bin\Debug\net9.0\Content\font.xnb
+C:\Users\Luka\Desktop\TINR\project\myGame\obj\Debug\net9.0\myGame.sourcelink.json

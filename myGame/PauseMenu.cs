@@ -28,7 +28,7 @@ namespace myGame
             for (int i = 0; i < objects.Count; i++)
             {
                 GameObject obj = objects[i];
-                spriteBatch.Draw(spritesheet, obj.position, new Rectangle(obj.textureData["x"], obj.textureData["y"], obj.textureData["width"], obj.textureData["height"]), obj.color, obj.rotation, obj.pivot, obj.scale, SpriteEffects.None, obj.z);
+                spriteBatch.Draw(spritesheet, obj.localPosition, new Rectangle(obj.textureData["x"], obj.textureData["y"], obj.textureData["width"], obj.textureData["height"]), obj.color, obj.rotation, obj.pivot, obj.scale, SpriteEffects.None, obj.z);
             }
         }
     }

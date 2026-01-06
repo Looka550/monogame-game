@@ -3,12 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input;
 
 namespace myGame
 {
     public class Ball : GameObject
     {
-        Vector2 velocity;
+        public Vector2 velocity;
 
         public Ball(float x, float y)
             : base(x, y, "ball_down", Color.White)
@@ -18,7 +19,17 @@ namespace myGame
 
         public override void update(GameTime gameTime)
         {
-            position += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        }
+
+        public override void onKeyPressed(Keys key)
+        {
+            Console.WriteLine($"clicked: {key}");
+        }
+
+        public override void onKeyReleased(Keys key)
+        {
+            Console.WriteLine($"released: {key}");
         }
     }
 }
