@@ -37,6 +37,8 @@ public class Main : Game
     SpriteFont uiFont;
 
     bool won = false;
+
+    public static List<Vector2> pointsToDraw;
     public static GameObject world = new GameObject(true);
 
     // input
@@ -77,7 +79,7 @@ public class Main : Game
 
         ball = new Ball(0, 0);
         tileCol = new Tile(200, 0);
-        ball2 = new Ball(200, 0);
+        ball2 = new Ball(200, 350);
         //ball2 = new Ball(200, 220);
         //ball3 = new Ball(150, 150);
         //ball.addChild(ball2);
@@ -93,14 +95,14 @@ public class Main : Game
         //ball3.name = "ball3";
         world.name = "world";
 
-        ball.addCollider("circle");
-        ball2.addCollider("circle");
-        tileCol.addCollider("box");
+        ball.addCollider("circle", true);
+        ball2.addCollider("circle", true);
+        tileCol.addCollider("border");
 
         for (int i = 0; i < 10; i++)
         {
             Tile tile = new Tile(i * 128, 600);
-            tile.addCollider("box");
+            tile.addCollider("border");
             tile.name = $"tile[{i}]";
         }
     }
@@ -122,6 +124,8 @@ public class Main : Game
 
     protected override void Update(GameTime gameTime)
     {
+        pointsToDraw = new List<Vector2>();
+
         world.traverse(obj => // calling start
         {
             if (!obj.hasStarted)
@@ -144,7 +148,7 @@ public class Main : Game
 
         ball.localPosition += ball.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         tileCol.localPosition += new Vector2(-12f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-        ball2.localPosition += new Vector2(0f, 500f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        ball2.localPosition += new Vector2(0f, 30f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
 
 
@@ -152,10 +156,6 @@ public class Main : Game
         checkCollisions();
         checkInput();
         world.UpdateTransform(); // update transforms of child objects
-        world.traverse(obj => // update hitbox positions
-        {
-            obj.UpdateHitbox();
-        });
         base.Update(gameTime);
     }
 
@@ -173,12 +173,31 @@ public class Main : Game
 
         world.traverse(obj =>
         {
-            obj.DebugDraw(_spriteBatch);
+            obj.debugDraw(_spriteBatch);
         });
+
+        for (int i = 0; i < pointsToDraw.Count; i++)
+        {
+            drawPoint(_spriteBatch, pointsToDraw[i]);
+        }
 
         _spriteBatch.End();
 
         base.Draw(gameTime);
+    }
+
+    void drawPoint(SpriteBatch spriteBatch, Vector2 position, int size = 12)
+    {
+        spriteBatch.Draw(
+            Main.debugPixel,
+            new Rectangle(
+                (int)position.X - size / 2,
+                (int)position.Y - size / 2,
+                size,
+                size
+            ),
+            Color.DarkOrange
+        );
     }
 
     void checkInput()
@@ -294,26 +313,44 @@ public class Main : Game
     void checkCollisions()
     {
         List<GameObject> colliders = new List<GameObject>();
+        List<GameObject> dynamics = new List<GameObject>();
 
         world.traverse(obj =>
         {
             if (obj.collider != null)
             {
                 colliders.Add(obj);
+                if (obj.collider.isDynamic)
+                {
+                    dynamics.Add(obj);
+                }
             }
         });
 
-        for (int i = 0; i < colliders.Count; i++)
+        for (int i = 0; i < dynamics.Count; i++)
         {
-            for (int j = i + 1; j < colliders.Count; j++)
+            for (int j = 0; j < colliders.Count; j++)
             {
-                var a = colliders[i];
+                var a = dynamics[i];
                 var b = colliders[j];
+                if (a == b)
+                {
+                    continue;
+                }
 
                 if (a.collider.intersects(b.collider))
                 {
-                    a.onCollision(b);
-                    b.onCollision(a);
+                    if (b.collider.isSolid)
+                    {
+                        //Console.WriteLine($"onTouch: {a.name} : {b.name}");
+                        b.collider?.moveAway(a);
+                    }
+                    else
+                    {
+                        //Console.WriteLine($"onCollision: {a.name} : {b.name}");
+                        a.onCollision(b);
+                        b.onCollision(a);
+                    }
                 }
             }
         }

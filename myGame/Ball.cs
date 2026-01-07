@@ -25,15 +25,12 @@ namespace myGame
 
         public override void onCollision(GameObject other)
         {
-            Console.WriteLine($"collision: {name} : {other.name}");
+
         }
 
         public override void onMouseClicked(MouseState mouse)
         {
-            if (isMouseOver(mouse))
-            {
-                Console.WriteLine($"clicked: {name}");
-            }
+
         }
     }
 }

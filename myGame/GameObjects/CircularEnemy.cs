@@ -11,7 +11,6 @@ public class CircularEnemy
     public float Speed; // how fast it moves along the circle
     public Vector2 Center; // center of the circle
 
-    public Rectangle Hitbox => new Rectangle((int)Position.X, (int)Position.Y, 128, 256); // same as spike
 
     public CircularEnemy(Vector2 center, float radius, float speed)
     {

@@ -8,14 +8,8 @@ namespace myGame
     {
         public float radius;
 
-        public CircleCollider(GameObject owner, Vector2 offset, float radius)
-            : base(owner, offset)
-        {
-            this.radius = radius;
-        }
-
-        public CircleCollider(GameObject owner, float radius)
-            : base(owner, Vector2.Zero)
+        public CircleCollider(GameObject owner, Vector2 offset, float radius, bool isDynamic)
+            : base(owner, offset, isDynamic)
         {
             this.radius = radius;
         }
@@ -32,9 +26,9 @@ namespace myGame
                 float r = radius + circle.radius;
                 return distSq <= r * r;
             }
-            else if (other is BoxCollider box)
+            else if (other is SquareCollider square)
             {
-                return box.intersects(this);
+                return square.intersects(this);
             }
 
             return false;
@@ -52,7 +46,7 @@ namespace myGame
             return Vector2.DistanceSquared(p, center) <= radius * radius;
         }
 
-        public override void DebugDraw(SpriteBatch spriteBatch)
+        public override void debugDraw(SpriteBatch spriteBatch)
         {
             int segments = 24;
             float step = MathHelper.TwoPi / segments;
@@ -96,6 +90,11 @@ namespace myGame
                 SpriteEffects.None,
                 0
             );
+        }
+
+        public override void moveAway(GameObject obj)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -16,7 +16,6 @@ namespace myGame
         public Color color;
         public Vector2 pivot;
         public int z;
-        public Rectangle hitbox;
 
         // traversal
         public GameObject parent;
@@ -119,7 +118,6 @@ namespace myGame
             textureData.Add("height", (int)rawData["height"]);
 
             pivot = new Vector2((float)rawData["pivotx"], (float)rawData["pivoty"]);
-            hitbox = new Rectangle((int)localPosition.X, (int)localPosition.Y, (int)scale.X * textureData["width"], (int)scale.Y * textureData["height"]);
         }
 
         public virtual void start() { }
@@ -205,28 +203,13 @@ namespace myGame
             }
         }
 
-        public void UpdateHitbox()
-        {
-            if (textureData == null)
-            {
-                return;
-            }
-
-            hitbox = new Rectangle(
-                (int)worldPosition.X,
-                (int)worldPosition.Y,
-                (int)(textureData["width"] * scale.X),
-                (int)(textureData["height"] * scale.Y)
-            );
-        }
-
 
         public void addCollider(Collider _collider)
         {
             collider = _collider;
         }
 
-        public void addCollider(string colliderType)
+        public void addCollider(string colliderType, bool isDynamic = false)
         {
             if (colliderType == "circle")
             {
@@ -234,16 +217,29 @@ namespace myGame
                 collider = new CircleCollider(
                     this,
                     Vector2.Zero,
-                    r
+                    r,
+                    isDynamic
                 );
             }
-            else if (colliderType == "box")
+            else if (colliderType == "square")
             {
-                collider = new BoxCollider(
+                collider = new SquareCollider(
                     this,
                     Vector2.Zero,
                     w,
-                    h
+                    h,
+                    isDynamic
+                );
+            }
+            else if (colliderType == "border")
+            {
+                collider = new SquareCollider(
+                    this,
+                    Vector2.Zero,
+                    w,
+                    h,
+                    isDynamic,
+                    true
                 );
             }
             else
@@ -262,9 +258,9 @@ namespace myGame
             return collider.containsPoint(mouse.Position);
         }
 
-        public void DebugDraw(SpriteBatch spriteBatch)
+        public void debugDraw(SpriteBatch spriteBatch)
         {
-            collider?.DebugDraw(spriteBatch);
+            collider?.debugDraw(spriteBatch);
         }
 
     }

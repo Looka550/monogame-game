@@ -7,7 +7,6 @@ public class Enemy
     public Vector2 Position;
     public float Speed;
     private bool movingRight;
-    public Rectangle Hitbox => new Rectangle((int)Position.X, (int)Position.Y, 128, 256); // Same size as spike
 
     private float leftBound;
     private float rightBound;

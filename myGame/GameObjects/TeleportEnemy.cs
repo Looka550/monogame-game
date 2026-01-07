@@ -12,8 +12,6 @@ public class TeleportEnemy
     private float timer;
     private bool atLeftSpot;
 
-    public Rectangle Hitbox => new Rectangle((int)Position.X, (int)Position.Y, 128, 256); // same as spike
-
     public TeleportEnemy(Vector2 left, Vector2 right, float interval)
     {
         LeftSpot = left;
