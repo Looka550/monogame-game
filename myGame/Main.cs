@@ -16,6 +16,8 @@ public class Main : Game
     public static Texture2D atlas;
     Texture2D spritesheet;
 
+    bool debugMode = false;
+
     bool paused = false;
     Texture2D textbox;
 
@@ -38,7 +40,7 @@ public class Main : Game
 
     bool won = false;
 
-    public static List<Vector2> pointsToDraw;
+    public static List<(Vector2 pos, Color color)> debugPoints;
     public static List<(Vector2 start, Vector2 end, Color color)> debugLines;
     public static GameObject world = new GameObject(true);
 
@@ -125,7 +127,7 @@ public class Main : Game
 
     protected override void Update(GameTime gameTime)
     {
-        pointsToDraw = new List<Vector2>();
+        debugPoints = new();
         debugLines = new();
 
         world.traverse(obj => // calling start
@@ -173,45 +175,42 @@ public class Main : Game
             obj.draw(_spriteBatch, spritesheet);
         });
 
-        world.traverse(obj =>
+        if (debugMode)
         {
-            obj.debugDraw(_spriteBatch);
-        });
+            world.traverse(obj =>
+            {
+                obj.debugDraw(_spriteBatch);
+            });
 
-        for (int i = 0; i < pointsToDraw.Count; i++)
-        {
-            drawPoint(_spriteBatch, pointsToDraw[i]);
+            foreach (var point in debugPoints)
+            {
+                drawPoint(_spriteBatch, point.pos, point.color);
+            }
+            foreach (var line in debugLines)
+            {
+                drawLine(_spriteBatch, line.start, line.end, line.color);
+            }
         }
-        foreach (var line in Main.debugLines)
-        {
-            DrawLine(_spriteBatch, line.start, line.end, line.color);
-        }
-        Main.debugLines.Clear();
 
         _spriteBatch.End();
 
         base.Draw(gameTime);
     }
 
-    void DrawLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color, int thickness = 2)
+    void drawLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color)
     {
-        // direction from start to end
+        int thickness = 2;
         Vector2 delta = end - start;
-
-        // length of the line
         float length = delta.Length();
-
-        // angle of the line
         float angle = (float)Math.Atan2(delta.Y, delta.X);
 
-        // draw the pixel stretched to the line's length and rotated
         spriteBatch.Draw(
-            Main.debugPixel,           // 1x1 white texture
-            start,                     // position
-            null,                      // source rectangle
-            color,                     // color
-            angle,                     // rotation
-            Vector2.Zero,              // origin at top-left
+            debugPixel,
+            start, // position
+            null, // source rectangle
+            color,
+            angle,
+            Vector2.Zero,
             new Vector2(length, thickness), // scale X = length, Y = thickness
             SpriteEffects.None,
             0f
@@ -219,17 +218,18 @@ public class Main : Game
     }
 
 
-    void drawPoint(SpriteBatch spriteBatch, Vector2 position, int size = 12)
+    void drawPoint(SpriteBatch spriteBatch, Vector2 position, Color color)
     {
+        int size = 12;
         spriteBatch.Draw(
-            Main.debugPixel,
+            debugPixel,
             new Rectangle(
                 (int)position.X - size / 2,
                 (int)position.Y - size / 2,
                 size,
                 size
             ),
-            Color.DarkOrange
+            color
         );
     }
 
