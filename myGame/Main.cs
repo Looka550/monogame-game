@@ -39,15 +39,16 @@ public class Main : Game
     bool won = false;
 
     public static List<Vector2> pointsToDraw;
+    public static List<(Vector2 start, Vector2 end, Color color)> debugLines;
     public static GameObject world = new GameObject(true);
 
     // input
     KeyboardState currentKeyboard;
     KeyboardState previousKeyboard;
 
-    List<Keys> keysDown = new();
-    List<Keys> keysPressed = new();
-    List<Keys> keysReleased = new();
+    public static List<Keys> keysDown = new List<Keys>();
+    public static List<Keys> keysPressed = new List<Keys>();
+    public static List<Keys> keysReleased = new List<Keys>();
 
     public static Texture2D debugPixel;
 
@@ -125,6 +126,7 @@ public class Main : Game
     protected override void Update(GameTime gameTime)
     {
         pointsToDraw = new List<Vector2>();
+        debugLines = new();
 
         world.traverse(obj => // calling start
         {
@@ -146,9 +148,9 @@ public class Main : Game
         });
 
 
-        ball.localPosition += ball.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        //ball.localPosition += ball.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         tileCol.localPosition += new Vector2(-12f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-        ball2.localPosition += new Vector2(0f, 30f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        //ball2.localPosition += new Vector2(0f, 30f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
 
 
@@ -180,11 +182,42 @@ public class Main : Game
         {
             drawPoint(_spriteBatch, pointsToDraw[i]);
         }
+        foreach (var line in Main.debugLines)
+        {
+            DrawLine(_spriteBatch, line.start, line.end, line.color);
+        }
+        Main.debugLines.Clear();
 
         _spriteBatch.End();
 
         base.Draw(gameTime);
     }
+
+    void DrawLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color, int thickness = 2)
+    {
+        // direction from start to end
+        Vector2 delta = end - start;
+
+        // length of the line
+        float length = delta.Length();
+
+        // angle of the line
+        float angle = (float)Math.Atan2(delta.Y, delta.X);
+
+        // draw the pixel stretched to the line's length and rotated
+        spriteBatch.Draw(
+            Main.debugPixel,           // 1x1 white texture
+            start,                     // position
+            null,                      // source rectangle
+            color,                     // color
+            angle,                     // rotation
+            Vector2.Zero,              // origin at top-left
+            new Vector2(length, thickness), // scale X = length, Y = thickness
+            SpriteEffects.None,
+            0f
+        );
+    }
+
 
     void drawPoint(SpriteBatch spriteBatch, Vector2 position, int size = 12)
     {
@@ -329,9 +362,9 @@ public class Main : Game
 
         for (int i = 0; i < dynamics.Count; i++)
         {
+            var a = dynamics[i];
             for (int j = 0; j < colliders.Count; j++)
             {
-                var a = dynamics[i];
                 var b = colliders[j];
                 if (a == b)
                 {
@@ -354,6 +387,5 @@ public class Main : Game
                 }
             }
         }
-
     }
 }

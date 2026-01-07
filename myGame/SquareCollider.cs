@@ -165,12 +165,7 @@ namespace myGame
                 Vector2 center = circle.getCenter();
                 Rectangle rect = worldRect;
 
-                // closest point on square to circle center
-                float closestX = MathHelper.Clamp(center.X, rect.Left, rect.Right);
-                float closestY = MathHelper.Clamp(center.Y, rect.Top, rect.Bottom);
-
-                Vector2 closestPoint = new Vector2(closestX, closestY);
-                //Main.pointsToDraw.Add(closestPoint);
+                //Main.pointsToDraw.Add(center);
 
                 Vector2 rectCenter = new Vector2(rect.Left + ((rect.Right - rect.Left) / 2f), rect.Top + ((rect.Bottom - rect.Top) / 2f));
                 //Main.pointsToDraw.Add(rectCenter);
@@ -180,10 +175,15 @@ namespace myGame
                 Vector2 rightc = new Vector2(rect.Right, rectCenter.Y);
                 Vector2 leftc = new Vector2(rect.Left, rectCenter.Y);
 
-                float topd = dist(closestPoint, topc);
-                float bottomd = dist(closestPoint, bottomc);
-                float rightd = dist(closestPoint, rightc);
-                float leftd = dist(closestPoint, leftc);
+                float topd = dist(center, topc);
+                float bottomd = dist(center, bottomc);
+                float rightd = dist(center, rightc);
+                float leftd = dist(center, leftc);
+
+                //Main.debugLines.Add((center, topc, Color.Red));
+                //Main.debugLines.Add((center, bottomc, Color.Green));
+                //Main.debugLines.Add((center, rightc, Color.Blue));
+                //Main.debugLines.Add((center, leftc, Color.Yellow));
 
                 float min = MathF.Min(MathF.Min(topd, bottomd), MathF.Min(rightd, leftd));
                 Vector2 movingForce;
@@ -209,18 +209,18 @@ namespace myGame
                     movingForce = new Vector2(-1f, 0f);
                 }
 
-                float penetration;
-
-                if (min == topd || min == bottomd)
+                for (int i = 0; i < 1000; i++) // not infinite loop just in case of bugs
                 {
-                    penetration = circle.radius - MathF.Abs(center.Y - closestPoint.Y); // Y axis
+                    if (!intersects(circle))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        circle.owner.worldPosition += movingForce; // changes position instantly (realligns itself with updatetransform next frame)
+                        circle.owner.localPosition += movingForce; // correct way to change position
+                    }
                 }
-                else
-                {
-                    penetration = circle.radius - MathF.Abs(center.X - closestPoint.X); // X axis
-                }
-
-                circle.owner.localPosition += movingForce * penetration;
             }
             else
             {

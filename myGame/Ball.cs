@@ -10,6 +10,7 @@ namespace myGame
     public class Ball : GameObject
     {
         public Vector2 velocity;
+        public bool gravity = true;
 
         public Ball(float x, float y)
             : base(x, y, "ball_down", Color.White)
@@ -19,18 +20,38 @@ namespace myGame
 
         public override void update(GameTime gameTime)
         {
+            if (gravity)
+            {
+                velocity.Y = 150f;
+            }
+            else
+            {
+                velocity.Y = -150f;
+            }
 
+            if (Main.keysDown.Contains(Keys.A))
+            {
+                velocity.X = -200f;
+            }
+            else if (Main.keysDown.Contains(Keys.D))
+            {
+                velocity.X = 200f;
+            }
+            else
+            {
+                velocity.X = 0f;
+            }
+
+            localPosition += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
-
-        public override void onCollision(GameObject other)
-        {
-
-        }
 
         public override void onMouseClicked(MouseState mouse)
         {
-
+            if (isMouseOver(mouse))
+            {
+                gravity = !gravity;
+            }
         }
     }
 }
