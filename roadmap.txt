@@ -1,5 +1,5 @@
 DONE    1. make gameobject graph traversal (parent + child)
-2. make mouseclicked and buttonclicked functions and call them on every gameobject (and update, start, lateUpdate, etc)
+DONE 2. make mouseclicked and buttonclicked functions and call them on every gameobject (and update, start, lateUpdate, etc)
 3. resize system:
     // GAME WORLD
     _spriteBatch.Begin();
@@ -11,4 +11,12 @@ DONE    1. make gameobject graph traversal (parent + child)
     DrawUI();
     _spriteBatch.End();
 
-4. 
+4. colliders
+    - on mouse click
+    
+    - debug draw
+    - offsets
+    - make all collider interactions work
+    - dynamics
+    - box = square
+    - border

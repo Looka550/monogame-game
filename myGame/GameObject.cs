@@ -23,6 +23,11 @@ namespace myGame
         public List<GameObject> children = new List<GameObject>();
         public Vector2 worldPosition;
 
+        // collisions
+        public Collider collider;
+        public int w;
+        public int h;
+
         public bool hasStarted = false;
 
         public string name = "GameObject";
@@ -100,7 +105,8 @@ namespace myGame
 
         public void Init()
         {
-
+            w = (int)(textureData["width"] * scale.X);
+            h = (int)(textureData["height"] * scale.Y);
         }
 
         public void loadTexture(string spriteName)
@@ -130,6 +136,8 @@ namespace myGame
         public virtual void onKeyPressed(Keys key) { }
         public virtual void onKeyReleased(Keys key) { }
 
+        public virtual void onCollision(GameObject other) { }
+
         public virtual void draw(SpriteBatch spriteBatch, Texture2D spritesheet)
         {
 
@@ -141,7 +149,7 @@ namespace myGame
                     new Rectangle(textureData["x"], textureData["y"], textureData["width"], textureData["height"]),
                     color,
                     rotation,
-                    pivot,
+                    Vector2.Zero,
                     scale,
                     SpriteEffects.None,
                     z
@@ -195,6 +203,68 @@ namespace myGame
             {
                 child.traverse(visitor);
             }
+        }
+
+        public void UpdateHitbox()
+        {
+            if (textureData == null)
+            {
+                return;
+            }
+
+            hitbox = new Rectangle(
+                (int)worldPosition.X,
+                (int)worldPosition.Y,
+                (int)(textureData["width"] * scale.X),
+                (int)(textureData["height"] * scale.Y)
+            );
+        }
+
+
+        public void addCollider(Collider _collider)
+        {
+            collider = _collider;
+        }
+
+        public void addCollider(string colliderType)
+        {
+            if (colliderType == "circle")
+            {
+                int r = (int)(textureData["width"] / 2 * scale.X);
+                collider = new CircleCollider(
+                    this,
+                    Vector2.Zero,
+                    r
+                );
+            }
+            else if (colliderType == "box")
+            {
+                collider = new BoxCollider(
+                    this,
+                    Vector2.Zero,
+                    w,
+                    h
+                );
+            }
+            else
+            {
+                Console.WriteLine("Invalid collider type");
+            }
+        }
+
+        public bool isMouseOver(MouseState mouse)
+        {
+            if (collider == null)
+            {
+                return false;
+            }
+
+            return collider.containsPoint(mouse.Position);
+        }
+
+        public void DebugDraw(SpriteBatch spriteBatch)
+        {
+            collider?.DebugDraw(spriteBatch);
         }
 
     }

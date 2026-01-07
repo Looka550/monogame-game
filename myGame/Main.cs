@@ -11,6 +11,8 @@ public class Main : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
 
+    //Vector2 resolution = new Vector2(844, 390);
+    Vector2 resolution = new Vector2(844 * 2, 390 * 2);
     public static Texture2D atlas;
     Texture2D spritesheet;
 
@@ -22,6 +24,8 @@ public class Main : Game
 
     public static SpriteLoader spriteLoader;
     Ball ball;
+    Tile tileCol;
+    Tile tileCol2;
     Ball ball2;
     Ball ball3;
     PauseMenu pauseMenu;
@@ -43,6 +47,8 @@ public class Main : Game
     List<Keys> keysPressed = new();
     List<Keys> keysReleased = new();
 
+    public static Texture2D debugPixel;
+
 
     public Main()
     {
@@ -56,25 +62,47 @@ public class Main : Game
 
         base.Initialize();
 
+
+
+
+        _graphics.PreferredBackBufferWidth = (int)resolution.X;
+        _graphics.PreferredBackBufferHeight = (int)resolution.Y;
+
+        _graphics.ApplyChanges();
+
+
         //movingEnemy = new Enemy(new Vector2(400, 150), 3f, 300, 500);
         //circularEnemy = new CircularEnemy(new Vector2(600, 150), 100f, 0.03f);
         //teleportEnemy = new TeleportEnemy(new Vector2(200, 0), new Vector2(500, 0), 2f);
 
         ball = new Ball(0, 0);
-        ball2 = new Ball(200, 220);
-        ball3 = new Ball(150, 150);
-        ball.addChild(ball2);
-        ball2.addChild(ball3);
+        tileCol = new Tile(200, 0);
+        ball2 = new Ball(200, 0);
+        //ball2 = new Ball(200, 220);
+        //ball3 = new Ball(150, 150);
+        //ball.addChild(ball2);
+        //ball2.addChild(ball3);
         pauseButton = new GameObject(670, 15, "blank", Color.Red);
         musicOffButton = new GameObject(660 - 128, 15, "music_off");
         musicOnButton = new GameObject(660 - 128, 15, "music_on");
         pauseMenu = new PauseMenu();
 
         ball.name = "ball";
+        tileCol.name = "moving_tile";
         ball2.name = "ball2";
-        ball3.name = "ball3";
+        //ball3.name = "ball3";
         world.name = "world";
 
+        ball.addCollider("circle");
+        ball2.addCollider("circle");
+        tileCol.addCollider("box");
+
+        for (int i = 0; i < 10; i++)
+        {
+            Tile tile = new Tile(i * 128, 600);
+            tile.addCollider("box");
+            tile.name = $"tile[{i}]";
+        }
     }
 
     protected override void LoadContent()
@@ -87,6 +115,9 @@ public class Main : Game
         uiFont = Content.Load<SpriteFont>("font");
 
         spriteLoader = new SpriteLoader();
+
+        debugPixel = new Texture2D(GraphicsDevice, 1, 1);
+        debugPixel.SetData(new[] { Color.White });
     }
 
     protected override void Update(GameTime gameTime)
@@ -110,15 +141,21 @@ public class Main : Game
             obj.lateUpdate(gameTime);
         });
 
-        checkCollisions();
-        checkInput();
 
         ball.localPosition += ball.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        tileCol.localPosition += new Vector2(-12f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        ball2.localPosition += new Vector2(0f, 500f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
 
 
         // technical things
-        world.UpdateTransform();
+        checkCollisions();
+        checkInput();
+        world.UpdateTransform(); // update transforms of child objects
+        world.traverse(obj => // update hitbox positions
+        {
+            obj.UpdateHitbox();
+        });
         base.Update(gameTime);
     }
 
@@ -132,6 +169,11 @@ public class Main : Game
         world.traverse(obj => // calling draw
         {
             obj.draw(_spriteBatch, spritesheet);
+        });
+
+        world.traverse(obj =>
+        {
+            obj.DebugDraw(_spriteBatch);
         });
 
         _spriteBatch.End();
@@ -249,28 +291,32 @@ public class Main : Game
 
 
 
-    private void checkCollisions()
+    void checkCollisions()
     {
+        List<GameObject> colliders = new List<GameObject>();
 
-    }
-
-    void mouseClicked()
-    {
-        /*
-        if (currentMouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton == ButtonState.Released)
+        world.traverse(obj =>
         {
-            //gravityDown = !gravityDown;
-
-            if (pauseButton.hitbox.Contains(currentMouse.Position))
+            if (obj.collider != null)
             {
-                paused = !paused;
+                colliders.Add(obj);
             }
+        });
 
-            if (musicOnButton.hitbox.Contains(currentMouse.Position))
+        for (int i = 0; i < colliders.Count; i++)
+        {
+            for (int j = i + 1; j < colliders.Count; j++)
             {
-                musicOn = !musicOn;
-            }
+                var a = colliders[i];
+                var b = colliders[j];
 
-        }*/
+                if (a.collider.intersects(b.collider))
+                {
+                    a.onCollision(b);
+                    b.onCollision(a);
+                }
+            }
+        }
+
     }
 }

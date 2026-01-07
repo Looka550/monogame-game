@@ -7,21 +7,16 @@ using Microsoft.Xna.Framework.Input;
 
 namespace myGame
 {
-    public class Ball : GameObject
+    public class Tile : GameObject
     {
         public Vector2 velocity;
+        static Random rnd = new Random();
 
-        public Ball(float x, float y)
-            : base(x, y, "ball_down", Color.White)
+        public Tile(float x, float y)
+            : base(x, y, "tile", new Color(245 + rnd.Next(-20, 10), 245 + rnd.Next(-20, 10), 245 + rnd.Next(-20, 10)))
         {
-            velocity = new Vector2(12f, 0f);
+            velocity = new Vector2(120f, 0f);
         }
-
-        public override void update(GameTime gameTime)
-        {
-
-        }
-
 
         public override void onCollision(GameObject other)
         {
