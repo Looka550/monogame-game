@@ -17,8 +17,9 @@ public class Main : Game
     //Vector2 resolution = new Vector2(844 * 2, 390 * 2);
     //Vector2 resolution = new Vector2(900, 500);
     //Vector2 resolution = new Vector2(1500, 900);
-    const int virtualHeight = 1024; // normal screen dimensions
-    float viewportScale;
+    public static int virtualHeight = 1024; // normal screen dimensions
+    public static Viewport viewport;
+    public static float viewportScale;
     int scrollX = 0;
 
 
@@ -27,7 +28,7 @@ public class Main : Game
 
     bool debugMode = true;
 
-    bool paused = false;
+    bool paused = true;
     Texture2D textbox;
 
     MouseState currentMouse;
@@ -39,6 +40,7 @@ public class Main : Game
     Tile tileCol2;
     Ball ball2;
     Ball ball3;
+    MainMenu mainmenu;
     PauseMenu pauseMenu;
     GameObject pauseButton;
     GameObject musicOffButton;
@@ -81,7 +83,7 @@ public class Main : Game
         _graphics.ApplyChanges();
 
 
-        Viewport viewport = GraphicsDevice.Viewport;
+        viewport = GraphicsDevice.Viewport;
 
         viewportScale = viewport.Height / (float)virtualHeight;
 
@@ -98,10 +100,12 @@ public class Main : Game
         //ball3 = new Ball(150, 150);
         //ball.addChild(ball2);
         //ball2.addChild(ball3);
-        pauseButton = new GameObject(670, 15, "blank", Color.Red);
+        pauseButton = new GameObject(670, 15, "pause_button");
         musicOffButton = new GameObject(660 - 128, 15, "music_off");
         musicOnButton = new GameObject(660 - 128, 15, "music_on");
         pauseMenu = new PauseMenu();
+        pauseMenu.start();
+        mainmenu = new MainMenu();
 
         ball.name = "ball";
         tileCol.name = "moving_tile";
@@ -109,15 +113,20 @@ public class Main : Game
         //ball3.name = "ball3";
         world.name = "world";
 
-        ball.addCollider("circle", true);
-        ball2.addCollider("circle", true);
-        tileCol.addCollider("border");
+        ball.addCollider("circle", new Vector2(2, 2), true);
+        ball2.addCollider("circle", null, true);
+        tileCol.addCollider("border", new Vector2(2, 2));
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 18; i++)
         {
             Tile tile = new Tile(i * 128, 1024 - 128);
             tile.addCollider("border");
             tile.name = $"tile[{i}]";
+        }
+        for (int i = 0; i < 10; i++)
+        {
+            Tile tile = new Tile(i * 128, i * 128);
+            tile.name = $"tile2[{i}]";
         }
     }
 
@@ -208,6 +217,8 @@ public class Main : Game
                 drawLine(spriteBatch, line.start, line.end, line.color);
             }
         }
+
+        pauseMenu.draw(spriteBatch, spritesheet);
 
         spriteBatch.End();
 

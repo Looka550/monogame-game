@@ -209,11 +209,27 @@ namespace myGame
             collider = _collider;
         }
 
-        public void addCollider(string colliderType, bool isDynamic = false)
+        public void addCollider(string colliderType, Nullable<Vector2> colScale = null, bool isDynamic = false)
         {
+            if (colScale == null)
+            {
+                colScale = Vector2.One;
+            }
+
+            Vector2 scale = (Vector2)colScale;
+
+            int colWidth = (int)(w * scale.X);
+            int colHeight = (int)(h * scale.Y);
+
+            Vector2 offset = new Vector2(
+                (w - colWidth) / 2f,
+                (h - colHeight) / 2f
+            );
+
+
             if (colliderType == "circle")
             {
-                int r = (int)(textureData["width"] / 2 * scale.X);
+                int r = colWidth / 2;
                 collider = new CircleCollider(
                     this,
                     Vector2.Zero,
@@ -225,19 +241,20 @@ namespace myGame
             {
                 collider = new SquareCollider(
                     this,
-                    Vector2.Zero,
-                    w,
-                    h,
+                    offset,
+                    colWidth,
+                    colHeight,
                     isDynamic
                 );
             }
             else if (colliderType == "border")
             {
+                Console.WriteLine($"w: {w}, h: {h}, colScale: {colScale}");
                 collider = new SquareCollider(
                     this,
-                    Vector2.Zero,
-                    w,
-                    h,
+                    offset,
+                    colWidth,
+                    colHeight,
                     isDynamic,
                     true
                 );
