@@ -124,10 +124,10 @@ namespace myGame
         public virtual void update(GameTime gameTime) { }
         public virtual void lateUpdate(GameTime gameTime) { }
 
-        public virtual void onMouseDown(MouseState mouse) { }
-        public virtual void onMouseUp(MouseState mouse) { }
-        public virtual void onMouseReleased(MouseState mouse) { }
-        public virtual void onMouseClicked(MouseState mouse) { }
+        public virtual void onMouseDown(MouseState mouse, Vector2 mouseWorldPos) { }
+        public virtual void onMouseUp(MouseState mouse, Vector2 mouseWorldPos) { }
+        public virtual void onMouseReleased(MouseState mouse, Vector2 mouseWorldPos) { }
+        public virtual void onMouseClicked(MouseState mouse, Vector2 mouseWorldPos) { }
 
         public virtual void onKeyDown(Keys key) { }
         public virtual void onKeyUp(Keys key) { }
@@ -248,14 +248,14 @@ namespace myGame
             }
         }
 
-        public bool isMouseOver(MouseState mouse)
+        public bool isMouseOver(Vector2 mouseWorldPos)
         {
             if (collider == null)
             {
                 return false;
             }
 
-            return collider.containsPoint(mouse.Position);
+            return collider.containsPoint(new Point((int)mouseWorldPos.X, (int)mouseWorldPos.Y));
         }
 
         public void debugDraw(SpriteBatch spriteBatch)

@@ -9,14 +9,23 @@ namespace myGame;
 public class Main : Game
 {
     private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
+    private SpriteBatch spriteBatch;
 
-    //Vector2 resolution = new Vector2(844, 390);
-    Vector2 resolution = new Vector2(844 * 2, 390 * 2);
+    // resize system
+
+    Vector2 resolution = new Vector2(844, 390);
+    //Vector2 resolution = new Vector2(844 * 2, 390 * 2);
+    //Vector2 resolution = new Vector2(900, 500);
+    //Vector2 resolution = new Vector2(1500, 900);
+    const int virtualHeight = 1024; // normal screen dimensions
+    float viewportScale;
+    int scrollX = 0;
+
+
     public static Texture2D atlas;
     Texture2D spritesheet;
 
-    bool debugMode = false;
+    bool debugMode = true;
 
     bool paused = false;
     Texture2D textbox;
@@ -67,13 +76,15 @@ public class Main : Game
 
         base.Initialize();
 
-
-
-
         _graphics.PreferredBackBufferWidth = (int)resolution.X;
         _graphics.PreferredBackBufferHeight = (int)resolution.Y;
-
         _graphics.ApplyChanges();
+
+
+        Viewport viewport = GraphicsDevice.Viewport;
+
+        viewportScale = viewport.Height / (float)virtualHeight;
+
 
 
         //movingEnemy = new Enemy(new Vector2(400, 150), 3f, 300, 500);
@@ -104,7 +115,7 @@ public class Main : Game
 
         for (int i = 0; i < 10; i++)
         {
-            Tile tile = new Tile(i * 128, 600);
+            Tile tile = new Tile(i * 128, 1024 - 128);
             tile.addCollider("border");
             tile.name = $"tile[{i}]";
         }
@@ -112,7 +123,7 @@ public class Main : Game
 
     protected override void LoadContent()
     {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
+        spriteBatch = new SpriteBatch(GraphicsDevice);
 
         atlas = Content.Load<Texture2D>("atlas2");
         spritesheet = Content.Load<Texture2D>("spritesheetTexture");
@@ -166,33 +177,39 @@ public class Main : Game
 
     protected override void Draw(GameTime gameTime)
     {
+        Vector2 cameraPosition = new Vector2(scrollX, 0);
+        Matrix cameraTransform =
+            Matrix.CreateTranslation(-cameraPosition.X, 0, 0) *
+            Matrix.CreateScale(viewportScale, viewportScale, 1f);
+
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        _spriteBatch.Begin();
+        spriteBatch.Begin(transformMatrix: cameraTransform);
 
-        world.traverse(obj => // calling draw
+
+        world.traverse(obj =>
         {
-            obj.draw(_spriteBatch, spritesheet);
+            obj.draw(spriteBatch, spritesheet);
         });
 
         if (debugMode)
         {
             world.traverse(obj =>
             {
-                obj.debugDraw(_spriteBatch);
+                obj.debugDraw(spriteBatch);
             });
 
             foreach (var point in debugPoints)
             {
-                drawPoint(_spriteBatch, point.pos, point.color);
+                drawPoint(spriteBatch, point.pos, point.color);
             }
             foreach (var line in debugLines)
             {
-                drawLine(_spriteBatch, line.start, line.end, line.color);
+                drawLine(spriteBatch, line.start, line.end, line.color);
             }
         }
 
-        _spriteBatch.End();
+        spriteBatch.End();
 
         base.Draw(gameTime);
     }
@@ -292,53 +309,62 @@ public class Main : Game
 
     void checkMouseInput()
     {
+        Vector2 mouseWorldPos = getMouseWorldPosition();
         // left
         if (currentMouse.LeftButton == ButtonState.Pressed) // mouse down
         {
-            world.traverse(obj => obj.onMouseDown(currentMouse));
+            world.traverse(obj => obj.onMouseDown(currentMouse, mouseWorldPos));
         }
 
         if (currentMouse.LeftButton == ButtonState.Released) // mouse up
         {
             // mouse up
-            world.traverse(obj => obj.onMouseUp(currentMouse));
+            world.traverse(obj => obj.onMouseUp(currentMouse, mouseWorldPos));
         }
 
         if (currentMouse.LeftButton == ButtonState.Released && previousMouse.LeftButton == ButtonState.Pressed) // mouse release
         {
             // release
-            world.traverse(obj => obj.onMouseReleased(currentMouse));
+            world.traverse(obj => obj.onMouseReleased(currentMouse, mouseWorldPos));
         }
 
         if (currentMouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton == ButtonState.Released) // mouse click
         {
             // click
-            world.traverse(obj => obj.onMouseClicked(currentMouse));
+            world.traverse(obj => obj.onMouseClicked(currentMouse, mouseWorldPos));
         }
 
         // right
         if (currentMouse.RightButton == ButtonState.Pressed) // mouse down
         {
-            world.traverse(obj => obj.onMouseDown(currentMouse));
+            world.traverse(obj => obj.onMouseDown(currentMouse, mouseWorldPos));
         }
 
         if (currentMouse.RightButton == ButtonState.Released) // mouse up
         {
             // mouse up
-            world.traverse(obj => obj.onMouseUp(currentMouse));
+            world.traverse(obj => obj.onMouseUp(currentMouse, mouseWorldPos));
         }
 
         if (currentMouse.RightButton == ButtonState.Released && previousMouse.RightButton == ButtonState.Pressed) // mouse release
         {
             // release
-            world.traverse(obj => obj.onMouseReleased(currentMouse));
+            world.traverse(obj => obj.onMouseReleased(currentMouse, mouseWorldPos));
         }
 
         if (currentMouse.RightButton == ButtonState.Pressed && previousMouse.RightButton == ButtonState.Released) // mouse click
         {
             // click
-            world.traverse(obj => obj.onMouseClicked(currentMouse));
+            world.traverse(obj => obj.onMouseClicked(currentMouse, mouseWorldPos));
         }
+    }
+
+    Vector2 getMouseWorldPosition()
+    {
+        return new Vector2(
+            currentMouse.X / viewportScale,
+            currentMouse.Y / viewportScale
+        );
     }
 
 
