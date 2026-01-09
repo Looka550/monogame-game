@@ -48,7 +48,7 @@ namespace myGame
 
         public override void onMouseClicked(MouseState mouse, Vector2 mouseWorldPos)
         {
-            if (isMouseOver(mouseWorldPos))
+            if (isMouseOver(mouseWorldPos) && !Main.states["paused"])
             {
                 gravity = !gravity;
             }

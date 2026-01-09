@@ -44,7 +44,7 @@ namespace myGame
             worldPosition = localPosition;
             scale = new Vector2(scaleX, scaleY);
             rotation = 0;
-            loadTexture(spriteName);
+            textureData = loadTexture(spriteName);
             color = _color;
             z = 0.1f;
             Main.world.addChild(this);
@@ -58,7 +58,7 @@ namespace myGame
             worldPosition = localPosition;
             scale = new Vector2(1, 1);
             rotation = 0;
-            loadTexture(spriteName);
+            textureData = loadTexture(spriteName);
             color = _color;
             z = 0.1f;
             Main.world.addChild(this);
@@ -72,7 +72,7 @@ namespace myGame
             worldPosition = localPosition;
             scale = new Vector2(1, 1);
             rotation = 0;
-            loadTexture(spriteName);
+            textureData = loadTexture(spriteName);
             color = Color.White;
             z = 0.1f;
             Main.world.addChild(this);
@@ -86,7 +86,7 @@ namespace myGame
             worldPosition = localPosition;
             scale = new Vector2(1, 1);
             rotation = 0;
-            loadTexture("transparent");
+            textureData = loadTexture("transparent");
             z = 0;
             Main.world.addChild(this);
 
@@ -114,16 +114,17 @@ namespace myGame
             h = (int)(textureData["height"] * scale.Y);
         }
 
-        public void loadTexture(string spriteName)
+        public Dictionary<string, int> loadTexture(string spriteName)
         {
             var rawData = Main.spriteLoader.getSprite(spriteName);
-            textureData = new Dictionary<string, int>();
+            var textureData = new Dictionary<string, int>();
             textureData.Add("x", (int)rawData["x"]);
             textureData.Add("y", (int)rawData["y"]);
             textureData.Add("width", (int)rawData["width"]);
             textureData.Add("height", (int)rawData["height"]);
 
             pivot = new Vector2((float)rawData["pivotx"], (float)rawData["pivoty"]);
+            return textureData;
         }
 
         public virtual void start() { }

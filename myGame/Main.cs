@@ -32,7 +32,8 @@ public class Main : Game
 
     bool debugMode = true;
 
-    public static bool paused = true;
+    public static Dictionary<string, bool> states = new();
+
     Texture2D textbox;
 
     MouseState currentMouse;
@@ -50,7 +51,6 @@ public class Main : Game
     PauseButton pauseButton;
     GameObject musicOffButton;
     GameObject musicOnButton;
-    bool musicOn = true;
 
     SpriteFont uiFont;
 
@@ -89,10 +89,13 @@ public class Main : Game
 
 
         viewport = GraphicsDevice.Viewport;
-
         viewportScale = viewport.Height / (float)virtualHeight;
+        int screenWidth = (int)(GraphicsDevice.Viewport.Width / viewportScale);
 
-
+        states["paused"] = true;
+        states["won"] = false;
+        states["soundOn"] = true;
+        states["musicOn"] = true;
 
 
         //movingEnemy = new Enemy(new Vector2(400, 150), 3f, 300, 500);
@@ -106,9 +109,13 @@ public class Main : Game
         //ball3 = new Ball(150, 150);
         //ball.addChild(ball2);
         //ball2.addChild(ball3);
-        pauseButton = new PauseButton();
-        musicOffButton = new GameObject(660 - 128, 15, "music_off");
-        musicOnButton = new GameObject(660 - 128, 15, "music_on");
+        //float x = 2216 - (128 * 1.4f) / 2 - 15;
+        Vector2 uiScale = new Vector2(1.4f, 1.4f);
+        int padding = 15;
+
+        PauseButton pauseButton = new PauseButton((int)(screenWidth - (128 * 1 * uiScale.X) - padding * 1), padding, uiScale.X, uiScale.Y);
+        MusicButton musicButton = new MusicButton((int)(screenWidth - (128 * 2 * uiScale.X) - padding * 2), padding, uiScale.X, uiScale.Y);
+        SoundButton soundutton = new SoundButton((int)(screenWidth - (128 * 3 * uiScale.X) - padding * 3), padding, uiScale.X, uiScale.Y);
         pauseMenu = new PauseMenu();
         pauseMenu.start();
         mainmenu = new MainMenu();
@@ -167,7 +174,7 @@ public class Main : Game
 
         world.traverse(obj => // calling start
         {
-            if (!obj.hasStarted && (!paused || obj.ui) && obj.enabled)
+            if (!obj.hasStarted && (!states["paused"] || obj.ui) && obj.enabled)
             {
                 obj.start();
                 obj.hasStarted = true;
@@ -176,7 +183,7 @@ public class Main : Game
 
         world.traverse(obj => // calling update
         {
-            if ((!paused || obj.ui) && obj.enabled)
+            if ((!states["paused"] || obj.ui) && obj.enabled)
             {
                 obj.update(gameTime);
             }
@@ -184,13 +191,13 @@ public class Main : Game
 
         world.traverse(obj => // calling late update
         {
-            if ((!paused || obj.ui) && obj.enabled)
+            if ((!states["paused"] || obj.ui) && obj.enabled)
             {
                 obj.lateUpdate(gameTime);
             }
         });
 
-        if ((!paused || tileCol.ui) && tileCol.enabled)
+        if ((!states["paused"] || tileCol.ui) && tileCol.enabled)
         {
             //ball.localPosition += ball.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
             tileCol.localPosition += new Vector2(-12f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;

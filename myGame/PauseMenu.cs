@@ -47,13 +47,23 @@ namespace myGame
             PauseSlider sliderMusic = new PauseSlider(screenCenter.X + 64, screenCenter.Y, this);
             addChild(sliderMusic);
             elements.Add(sliderMusic);
+
+            SoundButton soundButton = new SoundButton(screenCenter.X, screenCenter.Y, 0.75f, 0.75f);
+            soundButton.localPosition -= new Vector2(soundButton.w / 2 + 192, soundButton.h / 2 + 128);
+            addChild(soundButton);
+            elements.Add(soundButton);
+
+            MusicButton musicButton = new MusicButton(screenCenter.X, screenCenter.Y, 0.75f, 0.75f);
+            musicButton.localPosition -= new Vector2(musicButton.w / 2 + 192, musicButton.h / 2);
+            addChild(musicButton);
+            elements.Add(musicButton);
         }
 
         public override void update(GameTime gameTime)
         {
             foreach (GameObject e in elements)
             {
-                e.enabled = Main.paused;
+                e.enabled = Main.states["paused"];
             }
         }
     }

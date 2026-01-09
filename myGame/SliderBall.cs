@@ -44,7 +44,7 @@ namespace myGame
 
         public override void onMouseClicked(MouseState mouse, Vector2 mouseWorldPos)
         {
-            if (isMouseOver(mouseWorldPos))
+            if (isMouseOverUI(mouseWorldPos))
             {
                 selected = true;
             }

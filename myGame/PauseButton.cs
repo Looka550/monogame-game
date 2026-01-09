@@ -10,8 +10,8 @@ namespace myGame
     public class PauseButton : GameObject
     {
 
-        public PauseButton()
-            : base(670, 15, "pause_button", Color.White)
+        public PauseButton(int x, int y, float scaleX, float scaleY)
+            : base(x, y, scaleX, scaleY, "pause_button", Color.White)
         {
             z = 0.8f;
             ui = true;
@@ -22,7 +22,7 @@ namespace myGame
         {
             if (isMouseOverUI(mouseWorldPos))
             {
-                Main.paused = !Main.paused;
+                Main.states["paused"] = !Main.states["paused"];
             }
         }
     }

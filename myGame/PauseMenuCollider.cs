@@ -21,7 +21,7 @@ namespace myGame
         {
             if (isMouseOver(mouseWorldPos))
             {
-                Main.paused = false;
+                Main.states["paused"] = false;
             }
         }
     }

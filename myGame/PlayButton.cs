@@ -23,7 +23,6 @@ namespace myGame
         {
             if (isMouseOver(mouseWorldPos))
             {
-                Console.WriteLine("clicked on play button");
                 Main.stage = "level";
             }
         }
