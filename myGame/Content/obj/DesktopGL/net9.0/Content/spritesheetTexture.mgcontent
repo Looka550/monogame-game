@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SourceFile>C:/Users/Luka/Desktop/TINR/project/myGame/Content/spritesheetTexture.png</SourceFile>
-  <SourceTime>2026-01-08T14:57:45.3821241+01:00</SourceTime>
+  <SourceTime>2026-01-08T22:35:08.2380444+01:00</SourceTime>
   <DestFile>C:/Users/Luka/Desktop/TINR/project/myGame/Content/bin/DesktopGL/Content/spritesheetTexture.xnb</DestFile>
-  <DestTime>2026-01-08T14:57:55.2532224+01:00</DestTime>
+  <DestTime>2026-01-08T22:35:19.6723545+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2025-10-20T16:25:32+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

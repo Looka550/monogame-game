@@ -48,6 +48,10 @@ namespace myGame
 
         public override void debugDraw(SpriteBatch spriteBatch)
         {
+            if (!owner.enabled)
+            {
+                return;
+            }
             int segments = 24;
             float step = MathHelper.TwoPi / segments;
             Color c = Color.Lime;
@@ -64,12 +68,12 @@ namespace myGame
                     MathF.Sin(angle) * radius
                 );
 
-                DrawLine(spriteBatch, prev, next, c, thickness);
+                drawLine(spriteBatch, prev, next, c, thickness);
                 prev = next;
             }
         }
 
-        static void DrawLine(
+        static void drawLine(
             SpriteBatch spriteBatch,
             Vector2 start,
             Vector2 end,
@@ -88,7 +92,7 @@ namespace myGame
                 Vector2.Zero,
                 new Vector2(edge.Length(), thickness),
                 SpriteEffects.None,
-                0
+                1f
             );
         }
 

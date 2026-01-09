@@ -72,19 +72,39 @@ namespace myGame
 
         public override void debugDraw(SpriteBatch spriteBatch)
         {
+            if (!owner.enabled)
+            {
+                return;
+            }
             Rectangle r = worldRect;
-            int t = 2;
+            int t = 5;
             Color c = Color.Red;
 
             // top
-            spriteBatch.Draw(Main.debugPixel, new Rectangle(r.X, r.Y, r.Width, t), c);
+            drawRect(spriteBatch, new Vector2(r.X, r.Y), new Vector2(r.Width, t), c);
             // bottom
-            spriteBatch.Draw(Main.debugPixel, new Rectangle(r.X, r.Bottom - t, r.Width, t), c);
+            drawRect(spriteBatch, new Vector2(r.X, r.Bottom - t), new Vector2(r.Width, t), c);
             // left
-            spriteBatch.Draw(Main.debugPixel, new Rectangle(r.X, r.Y, t, r.Height), c);
+            drawRect(spriteBatch, new Vector2(r.X, r.Y), new Vector2(t, r.Height), c);
             // right
-            spriteBatch.Draw(Main.debugPixel, new Rectangle(r.Right - t, r.Y, t, r.Height), c);
+            drawRect(spriteBatch, new Vector2(r.Right - t, r.Y), new Vector2(t, r.Height), c);
         }
+
+        void drawRect(SpriteBatch spriteBatch, Vector2 position, Vector2 size, Color color)
+        {
+            spriteBatch.Draw(
+                Main.debugPixel,
+                position,
+                null,
+                color,
+                0f,
+                Vector2.Zero,
+                size,
+                SpriteEffects.None,
+                1f
+            );
+        }
+
 
         float dist(Vector2 a, Vector2 b)
         {
@@ -100,10 +120,10 @@ namespace myGame
                 Vector2 center = circle.getCenter();
                 Rectangle rect = worldRect;
 
-                Main.debugPoints.Add((center, Color.DarkOrange));
+                Main.debugPoints.Add((center, Color.DarkOrange, owner.ui));
 
                 Vector2 rectCenter = new Vector2(rect.Left + ((rect.Right - rect.Left) / 2f), rect.Top + ((rect.Bottom - rect.Top) / 2f));
-                Main.debugPoints.Add((rectCenter, Color.DarkOrange));
+                Main.debugPoints.Add((rectCenter, Color.DarkOrange, owner.ui));
 
                 Vector2 topc = new Vector2(rectCenter.X, rect.Top);
                 Vector2 bottomc = new Vector2(rectCenter.X, rect.Bottom);
@@ -115,32 +135,32 @@ namespace myGame
                 float rightd = dist(center, rightc);
                 float leftd = dist(center, leftc);
 
-                Main.debugLines.Add((center, topc, Color.Red));
-                Main.debugLines.Add((center, bottomc, Color.Green));
-                Main.debugLines.Add((center, rightc, Color.Blue));
-                Main.debugLines.Add((center, leftc, Color.Yellow));
+                Main.debugLines.Add((center, topc, Color.Red, owner.ui));
+                Main.debugLines.Add((center, bottomc, Color.Green, owner.ui));
+                Main.debugLines.Add((center, rightc, Color.Blue, owner.ui));
+                Main.debugLines.Add((center, leftc, Color.Yellow, owner.ui));
 
                 float min = MathF.Min(MathF.Min(topd, bottomd), MathF.Min(rightd, leftd));
                 Vector2 movingForce;
 
                 if (min == topd)
                 {
-                    Main.debugPoints.Add((topc, Color.DarkOrange));
+                    Main.debugPoints.Add((topc, Color.DarkOrange, owner.ui));
                     movingForce = new Vector2(0f, -1f);
                 }
                 else if (min == bottomd)
                 {
-                    Main.debugPoints.Add((bottomc, Color.DarkOrange));
+                    Main.debugPoints.Add((bottomc, Color.DarkOrange, owner.ui));
                     movingForce = new Vector2(0f, 1f);
                 }
                 else if (min == rightd)
                 {
-                    Main.debugPoints.Add((rightc, Color.DarkOrange));
+                    Main.debugPoints.Add((rightc, Color.DarkOrange, owner.ui));
                     movingForce = new Vector2(1f, 0f);
                 }
                 else
                 {
-                    Main.debugPoints.Add((leftc, Color.DarkOrange));
+                    Main.debugPoints.Add((leftc, Color.DarkOrange, owner.ui));
                     movingForce = new Vector2(-1f, 0f);
                 }
 

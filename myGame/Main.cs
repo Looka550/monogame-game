@@ -8,8 +8,9 @@ namespace myGame;
 
 public class Main : Game
 {
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch spriteBatch;
+    GraphicsDeviceManager _graphics;
+    SpriteBatch spriteBatchWorld;
+    SpriteBatch spriteBatchUI;
 
     // resize system
 
@@ -20,7 +21,10 @@ public class Main : Game
     public static int virtualHeight = 1024; // normal screen dimensions
     public static Viewport viewport;
     public static float viewportScale;
-    int scrollX = 0;
+    public static int scrollX = 0;
+    public static string stage = "level";
+    string previousStage = "mainmenu";
+    public static int levelNumber = 1;
 
 
     public static Texture2D atlas;
@@ -28,7 +32,7 @@ public class Main : Game
 
     bool debugMode = true;
 
-    bool paused = true;
+    public static bool paused = true;
     Texture2D textbox;
 
     MouseState currentMouse;
@@ -41,8 +45,9 @@ public class Main : Game
     Ball ball2;
     Ball ball3;
     MainMenu mainmenu;
+    LevelsMenu levelsmenu;
     PauseMenu pauseMenu;
-    GameObject pauseButton;
+    PauseButton pauseButton;
     GameObject musicOffButton;
     GameObject musicOnButton;
     bool musicOn = true;
@@ -51,8 +56,8 @@ public class Main : Game
 
     bool won = false;
 
-    public static List<(Vector2 pos, Color color)> debugPoints;
-    public static List<(Vector2 start, Vector2 end, Color color)> debugLines;
+    public static List<(Vector2 pos, Color color, bool ui)> debugPoints;
+    public static List<(Vector2 start, Vector2 end, Color color, bool ui)> debugLines;
     public static GameObject world = new GameObject(true);
 
     // input
@@ -89,6 +94,7 @@ public class Main : Game
 
 
 
+
         //movingEnemy = new Enemy(new Vector2(400, 150), 3f, 300, 500);
         //circularEnemy = new CircularEnemy(new Vector2(600, 150), 100f, 0.03f);
         //teleportEnemy = new TeleportEnemy(new Vector2(200, 0), new Vector2(500, 0), 2f);
@@ -100,12 +106,13 @@ public class Main : Game
         //ball3 = new Ball(150, 150);
         //ball.addChild(ball2);
         //ball2.addChild(ball3);
-        pauseButton = new GameObject(670, 15, "pause_button");
+        pauseButton = new PauseButton();
         musicOffButton = new GameObject(660 - 128, 15, "music_off");
         musicOnButton = new GameObject(660 - 128, 15, "music_on");
         pauseMenu = new PauseMenu();
         pauseMenu.start();
         mainmenu = new MainMenu();
+        levelsmenu = new LevelsMenu();
 
         ball.name = "ball";
         tileCol.name = "moving_tile";
@@ -132,7 +139,8 @@ public class Main : Game
 
     protected override void LoadContent()
     {
-        spriteBatch = new SpriteBatch(GraphicsDevice);
+        spriteBatchWorld = new SpriteBatch(GraphicsDevice);
+        spriteBatchUI = new SpriteBatch(GraphicsDevice);
 
         atlas = Content.Load<Texture2D>("atlas2");
         spritesheet = Content.Load<Texture2D>("spritesheetTexture");
@@ -150,9 +158,16 @@ public class Main : Game
         debugPoints = new();
         debugLines = new();
 
+        if (stage != previousStage)
+        {
+            updateEnableds();
+        }
+        previousStage = stage;
+
+
         world.traverse(obj => // calling start
         {
-            if (!obj.hasStarted)
+            if (!obj.hasStarted && (!paused || obj.ui) && obj.enabled)
             {
                 obj.start();
                 obj.hasStarted = true;
@@ -161,20 +176,36 @@ public class Main : Game
 
         world.traverse(obj => // calling update
         {
-            obj.update(gameTime);
+            if ((!paused || obj.ui) && obj.enabled)
+            {
+                obj.update(gameTime);
+            }
         });
 
         world.traverse(obj => // calling late update
         {
-            obj.lateUpdate(gameTime);
+            if ((!paused || obj.ui) && obj.enabled)
+            {
+                obj.lateUpdate(gameTime);
+            }
         });
 
+        if ((!paused || tileCol.ui) && tileCol.enabled)
+        {
+            //ball.localPosition += ball.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            tileCol.localPosition += new Vector2(-12f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //ball2.localPosition += new Vector2(0f, 30f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
 
-        //ball.localPosition += ball.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-        tileCol.localPosition += new Vector2(-12f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-        //ball2.localPosition += new Vector2(0f, 30f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-
+        if (keysDown.Contains(Keys.V))
+        {
+            scrollX++;
+        }
+        else if (keysDown.Contains(Keys.C))
+        {
+            scrollX--;
+        }
 
         // technical things
         checkCollisions();
@@ -183,44 +214,111 @@ public class Main : Game
         base.Update(gameTime);
     }
 
+    void updateEnableds()
+    {
+        world.traverse(obj =>
+        {
+            obj.enabled = (obj.drawCondition == stage);
+        });
+    }
+
 
     protected override void Draw(GameTime gameTime)
     {
-        Vector2 cameraPosition = new Vector2(scrollX, 0);
-        Matrix cameraTransform =
-            Matrix.CreateTranslation(-cameraPosition.X, 0, 0) *
-            Matrix.CreateScale(viewportScale, viewportScale, 1f);
-
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        spriteBatch.Begin(transformMatrix: cameraTransform);
+        Vector2 cameraPositionWorld = new Vector2(scrollX, 0);
+        Matrix cameraTransformWorld =
+            Matrix.CreateTranslation(-cameraPositionWorld.X, 0, 0) *
+            Matrix.CreateScale(viewportScale, viewportScale, 1f);
+
+        spriteBatchWorld.Begin(
+            transformMatrix: cameraTransformWorld,
+            sortMode: SpriteSortMode.FrontToBack,
+            blendState: BlendState.NonPremultiplied
+        );
 
 
-        world.traverse(obj =>
+        world.traverse(obj => // for world objects
         {
-            obj.draw(spriteBatch, spritesheet);
+            if (!obj.ui && obj.enabled)
+            {
+                obj.draw(spriteBatchWorld, spritesheet);
+            }
         });
 
         if (debugMode)
         {
             world.traverse(obj =>
             {
-                obj.debugDraw(spriteBatch);
+                if (!obj.ui && obj.enabled)
+                {
+                    obj.debugDraw(spriteBatchWorld);
+                }
             });
 
             foreach (var point in debugPoints)
             {
-                drawPoint(spriteBatch, point.pos, point.color);
+                if (!point.ui)
+                {
+                    drawPoint(spriteBatchWorld, point.pos, point.color);
+                }
             }
             foreach (var line in debugLines)
             {
-                drawLine(spriteBatch, line.start, line.end, line.color);
+                if (!line.ui)
+                {
+                    drawLine(spriteBatchWorld, line.start, line.end, line.color);
+                }
             }
         }
 
-        pauseMenu.draw(spriteBatch, spritesheet);
+        spriteBatchWorld.End();
 
-        spriteBatch.End();
+        Matrix cameraTransformUI =
+            Matrix.CreateTranslation(0, 0, 0) *
+            Matrix.CreateScale(viewportScale, viewportScale, 1f);
+        spriteBatchUI.Begin(
+            transformMatrix: cameraTransformUI,
+            sortMode: SpriteSortMode.FrontToBack,
+            blendState: BlendState.NonPremultiplied
+        );
+
+        world.traverse(obj => // for ui objects (must run the code twice because 2 spritebatches dont handle z values correct)
+        {
+            if (obj.ui && obj.enabled)
+            {
+                obj.draw(spriteBatchUI, spritesheet);
+            }
+        });
+
+        if (debugMode)
+        {
+            world.traverse(obj =>
+            {
+                if (obj.ui && obj.enabled)
+                {
+                    obj.debugDraw(spriteBatchUI);
+                }
+            });
+
+            foreach (var point in debugPoints)
+            {
+                if (point.ui)
+                {
+                    drawPoint(spriteBatchUI, point.pos, point.color);
+                }
+            }
+            foreach (var line in debugLines)
+            {
+                if (line.ui)
+                {
+                    drawLine(spriteBatchUI, line.start, line.end, line.color);
+                }
+            }
+        }
+
+        spriteBatchUI.End();
 
         base.Draw(gameTime);
     }
@@ -241,7 +339,7 @@ public class Main : Game
             Vector2.Zero,
             new Vector2(length, thickness), // scale X = length, Y = thickness
             SpriteEffects.None,
-            0f
+            1f
         );
     }
 
@@ -251,13 +349,14 @@ public class Main : Game
         int size = 12;
         spriteBatch.Draw(
             debugPixel,
-            new Rectangle(
-                (int)position.X - size / 2,
-                (int)position.Y - size / 2,
-                size,
-                size
-            ),
-            color
+            position - new Vector2(size / 2f, size / 2f),
+            null,
+            color,
+            0f,
+            Vector2.Zero,
+            Vector2.One,
+            SpriteEffects.None,
+            1f
         );
     }
 
@@ -290,24 +389,48 @@ public class Main : Game
 
         foreach (var key in keysDown)
         {
-            world.traverse(obj => obj.onKeyDown(key));
+            world.traverse(obj =>
+            {
+                if (obj.enabled)
+                {
+                    obj.onKeyDown(key);
+                }
+            });
         }
 
         foreach (var key in keysPressed)
         {
-            world.traverse(obj => obj.onKeyPressed(key));
+            world.traverse(obj =>
+            {
+                if (obj.enabled)
+                {
+                    obj.onKeyPressed(key);
+                }
+            });
         }
 
         foreach (var key in keysReleased)
         {
-            world.traverse(obj => obj.onKeyReleased(key));
+            world.traverse(obj =>
+            {
+                if (obj.enabled)
+                {
+                    obj.onKeyReleased(key);
+                }
+            });
         }
 
         foreach (var key in previousKeyboard.GetPressedKeys())
         {
             if (!currentKeyboard.IsKeyDown(key))
             {
-                world.traverse(obj => obj.onKeyUp(key));
+                world.traverse(obj =>
+                {
+                    if (obj.enabled)
+                    {
+                        obj.onKeyUp(key);
+                    }
+                });
             }
         }
 
@@ -324,49 +447,97 @@ public class Main : Game
         // left
         if (currentMouse.LeftButton == ButtonState.Pressed) // mouse down
         {
-            world.traverse(obj => obj.onMouseDown(currentMouse, mouseWorldPos));
+            world.traverse(obj =>
+            {
+                if (obj.enabled)
+                {
+                    obj.onMouseDown(currentMouse, mouseWorldPos);
+                }
+            });
         }
 
         if (currentMouse.LeftButton == ButtonState.Released) // mouse up
         {
             // mouse up
-            world.traverse(obj => obj.onMouseUp(currentMouse, mouseWorldPos));
+            world.traverse(obj =>
+            {
+                if (obj.enabled)
+                {
+                    obj.onMouseUp(currentMouse, mouseWorldPos);
+                }
+            });
         }
 
         if (currentMouse.LeftButton == ButtonState.Released && previousMouse.LeftButton == ButtonState.Pressed) // mouse release
         {
             // release
-            world.traverse(obj => obj.onMouseReleased(currentMouse, mouseWorldPos));
+            world.traverse(obj =>
+            {
+                if (obj.enabled)
+                {
+                    obj.onMouseReleased(currentMouse, mouseWorldPos);
+                }
+            });
         }
 
         if (currentMouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton == ButtonState.Released) // mouse click
         {
             // click
-            world.traverse(obj => obj.onMouseClicked(currentMouse, mouseWorldPos));
+            world.traverse(obj =>
+            {
+                if (obj.enabled)
+                {
+                    obj.onMouseClicked(currentMouse, mouseWorldPos);
+                }
+            });
         }
 
         // right
         if (currentMouse.RightButton == ButtonState.Pressed) // mouse down
         {
-            world.traverse(obj => obj.onMouseDown(currentMouse, mouseWorldPos));
+            world.traverse(obj =>
+            {
+                if (obj.enabled)
+                {
+                    obj.onMouseDown(currentMouse, mouseWorldPos);
+                }
+            });
         }
 
         if (currentMouse.RightButton == ButtonState.Released) // mouse up
         {
             // mouse up
-            world.traverse(obj => obj.onMouseUp(currentMouse, mouseWorldPos));
+            world.traverse(obj =>
+            {
+                if (obj.enabled)
+                {
+                    obj.onMouseUp(currentMouse, mouseWorldPos);
+                }
+            });
         }
 
         if (currentMouse.RightButton == ButtonState.Released && previousMouse.RightButton == ButtonState.Pressed) // mouse release
         {
             // release
-            world.traverse(obj => obj.onMouseReleased(currentMouse, mouseWorldPos));
+            world.traverse(obj =>
+            {
+                if (obj.enabled)
+                {
+                    obj.onMouseReleased(currentMouse, mouseWorldPos);
+                }
+            });
         }
 
         if (currentMouse.RightButton == ButtonState.Pressed && previousMouse.RightButton == ButtonState.Released) // mouse click
         {
             // click
-            world.traverse(obj => obj.onMouseClicked(currentMouse, mouseWorldPos));
+            world.traverse(obj =>
+            {
+                if (obj.enabled)
+                {
+                    obj.onMouseClicked(currentMouse, mouseWorldPos);
+                }
+            });
         }
     }
 
@@ -403,7 +574,7 @@ public class Main : Game
             for (int j = 0; j < colliders.Count; j++)
             {
                 var b = colliders[j];
-                if (a == b)
+                if (a == b || !a.enabled || !b.enabled)
                 {
                     continue;
                 }

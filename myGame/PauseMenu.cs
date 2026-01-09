@@ -3,32 +3,57 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input;
 
 namespace myGame
 {
-    public class PauseMenu
+    public class PauseMenu : GameObject
     {
-
-        List<GameObject> objects;
-
-        public virtual void start()
+        public List<GameObject> elements = new List<GameObject>();
+        public PauseMenu()
+            : base()
         {
-            objects = new List<GameObject>();
-            GameObject background = new GameObject(300, 60, 2, 3, "blank", Color.Aqua);
-            objects.Add(background);
+            Vector2 screenCenter = new Vector2(
+                Main.viewport.Width / Main.viewportScale * 0.5f,
+                Main.virtualHeight * 0.5f
+            );
+            ui = true;
+
+            GameObject overlay = new GameObject(0, 0, 20, 8, "blank", new Color(255, 255, 255, 100));
+            overlay.z = 0.79f;
+            overlay.ui = true;
+            addChild(overlay);
+            elements.Add(overlay);
+
+            GameObject background = new GameObject(screenCenter.X, screenCenter.Y, "pause_menu");
+            background.localPosition -= new Vector2(background.w / 2, background.h / 2);
+            background.z = 0.8f;
+            background.ui = true;
+            addChild(background);
+            elements.Add(background);
+
+            MenuButton menubutton = new MenuButton(screenCenter.X, screenCenter.Y);
+            menubutton.localPosition -= new Vector2(menubutton.w / 2, menubutton.h / 2);
+            menubutton.z = 0.81f;
+            menubutton.ui = true;
+            addChild(menubutton);
+            elements.Add(menubutton);
+
+            PauseSlider sliderSound = new PauseSlider(screenCenter.X + 64, screenCenter.Y, this, 50);
+            sliderSound.localPosition -= new Vector2(0, 128);
+            addChild(sliderSound);
+            elements.Add(sliderSound);
+
+            PauseSlider sliderMusic = new PauseSlider(screenCenter.X + 64, screenCenter.Y, this);
+            addChild(sliderMusic);
+            elements.Add(sliderMusic);
         }
 
-        public virtual void update(GameTime gameTime)
+        public override void update(GameTime gameTime)
         {
-
-        }
-
-        public virtual void draw(SpriteBatch spriteBatch, Texture2D spritesheet)
-        {
-            for (int i = 0; i < objects.Count; i++)
+            foreach (GameObject e in elements)
             {
-                GameObject obj = objects[i];
-                spriteBatch.Draw(spritesheet, obj.localPosition, new Rectangle(obj.textureData["x"], obj.textureData["y"], obj.textureData["width"], obj.textureData["height"]), obj.color, obj.rotation, obj.pivot, obj.scale, SpriteEffects.None, obj.z);
+                e.enabled = Main.paused;
             }
         }
     }

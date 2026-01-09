@@ -11,27 +11,22 @@ namespace myGame
     {
 
         GameObject play;
+        GameObject levels;
 
         public MainMenu()
-            : base(0, 0, "blank", Color.HotPink)
+            : base()
         {
             Vector2 screenCenter = new Vector2(
                 Main.viewport.Width / Main.viewportScale * 0.5f,
                 Main.virtualHeight * 0.5f
             );
+            drawCondition = "mainmenu";
 
-            Console.WriteLine($"screen center: {screenCenter}");
-
-            play = new GameObject(screenCenter.X, screenCenter.Y, "play_button", Color.White);
-            play.localPosition -= new Vector2(play.w / 2, play.h / 2);
+            play = new PlayButton(screenCenter.X, screenCenter.Y);
             addChild(play);
 
-            
-        }
-
-        public override void onMouseClicked(MouseState mouse, Vector2 mouseWorldPos)
-        {
-            Console.WriteLine($"mouse position: {mouseWorldPos}");
+            levels = new LevelsButton(screenCenter.X, screenCenter.Y);
+            addChild(levels);
         }
     }
 }

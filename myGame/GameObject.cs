@@ -15,7 +15,7 @@ namespace myGame
         public float rotation;
         public Color color;
         public Vector2 pivot;
-        public int z;
+        public float z;
 
         // traversal
         public GameObject parent;
@@ -31,18 +31,22 @@ namespace myGame
 
         public string name = "GameObject";
 
+        public string drawCondition = "level";
+        public bool enabled = true;
+        public bool ui = false;
 
 
 
-        public GameObject(float x, float y, float width, float height, string spriteName, Color _color)
+
+        public GameObject(float x, float y, float scaleX, float scaleY, string spriteName, Color _color)
         {
             localPosition = new Vector2(x, y);
             worldPosition = localPosition;
-            scale = new Vector2(width, height);
+            scale = new Vector2(scaleX, scaleY);
             rotation = 0;
             loadTexture(spriteName);
             color = _color;
-            z = 0;
+            z = 0.1f;
             Main.world.addChild(this);
 
             Init();
@@ -56,7 +60,7 @@ namespace myGame
             rotation = 0;
             loadTexture(spriteName);
             color = _color;
-            z = 0;
+            z = 0.1f;
             Main.world.addChild(this);
 
             Init();
@@ -70,7 +74,7 @@ namespace myGame
             rotation = 0;
             loadTexture(spriteName);
             color = Color.White;
-            z = 0;
+            z = 0.1f;
             Main.world.addChild(this);
 
             Init();
@@ -82,6 +86,8 @@ namespace myGame
             worldPosition = localPosition;
             scale = new Vector2(1, 1);
             rotation = 0;
+            loadTexture("transparent");
+            z = 0;
             Main.world.addChild(this);
 
             Init();
@@ -139,7 +145,7 @@ namespace myGame
         public virtual void draw(SpriteBatch spriteBatch, Texture2D spritesheet)
         {
 
-            if (textureData != null)
+            if (textureData != null && drawCondition == Main.stage && enabled)
             {
                 spriteBatch.Draw(
                     spritesheet,
@@ -249,7 +255,6 @@ namespace myGame
             }
             else if (colliderType == "border")
             {
-                Console.WriteLine($"w: {w}, h: {h}, colScale: {colScale}");
                 collider = new SquareCollider(
                     this,
                     offset,
@@ -272,12 +277,25 @@ namespace myGame
                 return false;
             }
 
+            return collider.containsPoint(new Point((int)mouseWorldPos.X + Main.scrollX, (int)mouseWorldPos.Y));
+        }
+
+        public bool isMouseOverUI(Vector2 mouseWorldPos)
+        {
+            if (collider == null)
+            {
+                return false;
+            }
+
             return collider.containsPoint(new Point((int)mouseWorldPos.X, (int)mouseWorldPos.Y));
         }
 
         public void debugDraw(SpriteBatch spriteBatch)
         {
-            collider?.debugDraw(spriteBatch);
+            if (drawCondition == Main.stage)
+            {
+                collider?.debugDraw(spriteBatch);
+            }
         }
 
     }
