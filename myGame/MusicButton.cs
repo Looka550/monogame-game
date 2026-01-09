@@ -23,6 +23,11 @@ namespace myGame
             textureOff = loadTexture("music_off");
         }
 
+        public override void update(GameTime gameTime)
+        {
+            musicOn = Main.states["musicOn"];
+        }
+
         public override void onMouseClicked(MouseState mouse, Vector2 mouseWorldPos)
         {
             if (isMouseOverUI(mouseWorldPos))

@@ -15,6 +15,7 @@ namespace myGame
         public Tile(float x, float y)
             : base(x, y, "tile", new Color(245 + rnd.Next(-20, 10), 245 + rnd.Next(-20, 10), 245 + rnd.Next(-20, 10)))
         {
+            name = "tile";
             velocity = new Vector2(120f, 0f);
         }
 

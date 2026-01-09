@@ -1,15 +1,5 @@
-1. resize system: (different resizes for UI and gameobjects)
-    // GAME WORLD
-    _spriteBatch.Begin();
-    DrawWorld();
-    _spriteBatch.End();
-
-    // UI
-    _spriteBatch.Begin(transformMatrix: uiScaleMatrix);
-    DrawUI();
-    _spriteBatch.End();
-
-2. UI object
-3. pause menu
-4. main menu
-5. levels menu
+1. spike
+2. moving, teleporting, orbiting spike
+3. win flag
+4. checkpoint flag
+5. Destroy gameobject function

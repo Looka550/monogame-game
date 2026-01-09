@@ -11,11 +11,17 @@ namespace myGame
     {
         public Vector2 velocity;
         public bool gravity = true;
+        Vector2 spawnpoint = new Vector2(40, 5 * 128);
+        Dictionary<string, int> textureUp;
+        Dictionary<string, int> textureDown;
 
         public Ball(float x, float y)
             : base(x, y, "ball_down", Color.White)
         {
             velocity = new Vector2(12f, 0f);
+            name = "player";
+            textureUp = loadTexture("ball_up");
+            textureDown = loadTexture("ball_down");
         }
 
         public override void update(GameTime gameTime)
@@ -52,6 +58,39 @@ namespace myGame
             {
                 gravity = !gravity;
             }
+        }
+
+        public override void draw(SpriteBatch spriteBatch, Texture2D spritesheet)
+        {
+            Rectangle texRect;
+            if (gravity)
+            {
+                texRect = new Rectangle(textureDown["x"], textureDown["y"], textureDown["width"], textureDown["height"]);
+            }
+            else
+            {
+                texRect = new Rectangle(textureUp["x"], textureUp["y"], textureUp["width"], textureUp["height"]);
+            }
+
+            if (textureUp != null && drawCondition == Main.stage && enabled)
+            {
+                spriteBatch.Draw(
+                    spritesheet,
+                    worldPosition,
+                    texRect,
+                    color,
+                    rotation,
+                    Vector2.Zero,
+                    scale,
+                    SpriteEffects.None,
+                    z
+                );
+            }
+        }
+
+        public void onDeath()
+        {
+            localPosition = spawnpoint;
         }
     }
 }

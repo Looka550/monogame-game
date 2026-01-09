@@ -92,10 +92,13 @@ public class Main : Game
         viewportScale = viewport.Height / (float)virtualHeight;
         int screenWidth = (int)(GraphicsDevice.Viewport.Width / viewportScale);
 
-        states["paused"] = true;
+        states["paused"] = false;
         states["won"] = false;
         states["soundOn"] = true;
         states["musicOn"] = true;
+
+        LevelData levelData = new LevelData();
+        var dataObjects = levelData.fetch(1);
 
 
         //movingEnemy = new Enemy(new Vector2(400, 150), 3f, 300, 500);
@@ -121,10 +124,8 @@ public class Main : Game
         mainmenu = new MainMenu();
         levelsmenu = new LevelsMenu();
 
-        ball.name = "ball";
-        tileCol.name = "moving_tile";
-        ball2.name = "ball2";
-        //ball3.name = "ball3";
+        Spike spike = new Spike(500, 8 * 128 - 172 - 128, 270);
+
         world.name = "world";
 
         ball.addCollider("circle", new Vector2(2, 2), true);
@@ -585,7 +586,6 @@ public class Main : Game
                 {
                     continue;
                 }
-
                 if (a.collider.intersects(b.collider))
                 {
                     if (b.collider.isSolid)
@@ -595,7 +595,6 @@ public class Main : Game
                     }
                     else
                     {
-                        //Console.WriteLine($"onCollision: {a.name} : {b.name}");
                         a.onCollision(b);
                         b.onCollision(a);
                     }
