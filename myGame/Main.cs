@@ -129,6 +129,10 @@ public class Main : Game
         OrbitingEnemy orbiter = new OrbitingEnemy(new Vector2(636, 5 * 128 - 172), 256, 1, true);
         MovingEnemy mover = new MovingEnemy(new Vector2(512, 5 * 128 - 172), new Vector2(1024, 5 * 128 - 172), 200, 0);
 
+        WinFlag winFlag = new WinFlag(1000, 400);
+        CheckpointFlag cf = new CheckpointFlag(500, 300);
+
+
         world.name = "world";
 
         ball.addCollider("circle", new Vector2(2, 2), true);

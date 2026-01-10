@@ -11,7 +11,7 @@ namespace myGame
     {
         public Vector2 velocity;
         public bool gravity = true;
-        Vector2 spawnpoint = new Vector2(40, 5 * 128);
+        public Vector2 spawnpoint = new Vector2(40, 5 * 128);
         Dictionary<string, int> textureUp;
         Dictionary<string, int> textureDown;
 

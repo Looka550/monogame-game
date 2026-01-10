@@ -49,6 +49,8 @@ namespace myGame
 
             localPosition.X = center.X + radius * (float)Math.Cos(angle);
             localPosition.Y = center.Y + radius * (float)Math.Sin(angle);
+
+            rotation = gameTime.TotalGameTime.Milliseconds / 40;
         }
 
     }
