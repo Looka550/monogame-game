@@ -65,8 +65,8 @@ namespace myGame
             if (other.name == "player" && !touched)
             {
                 touched = true;
-                ((Ball)other).spawnpoint = localPosition - new Vector2(0, 200);
-                Console.WriteLine("touched checkpoint");
+                ((Ball)other).spawnpoint = localPosition + new Vector2(0, 30);
+                Console.WriteLine("Reached checkpoint");
             }
         }
     }

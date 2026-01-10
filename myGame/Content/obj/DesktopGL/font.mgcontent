@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SourceFile>c:/Users/Luka/Desktop/TINR/project/myGame/Content/font.spritefont</SourceFile>
-  <SourceTime>2026-01-03T23:14:07.5787679+01:00</SourceTime>
+  <SourceTime>2026-01-03T23:16:01.1589858+01:00</SourceTime>
   <DestFile>c:/Users/Luka/Desktop/TINR/project/myGame/Content/bin/DesktopGL/font.xnb</DestFile>
-  <DestTime>2026-01-03T23:14:27.3271874+01:00</DestTime>
+  <DestTime>2026-01-10T23:57:20.6990675+01:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2025-10-20T16:25:32+02:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>

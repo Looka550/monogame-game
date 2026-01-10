@@ -1,5 +1,0 @@
-1. spike
-2. moving, teleporting, orbiting spike
-3. win flag
-4. checkpoint flag
-5. Destroy gameobject function

@@ -299,5 +299,11 @@ namespace myGame
             }
         }
 
+        public void destroy()
+        {
+            enabled = false;
+            parent = null;
+        }
+
     }
 }

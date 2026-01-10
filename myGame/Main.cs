@@ -18,11 +18,12 @@ public class Main : Game
     //Vector2 resolution = new Vector2(844 * 2, 390 * 2);
     //Vector2 resolution = new Vector2(900, 500);
     //Vector2 resolution = new Vector2(1500, 900);
+
     public static int virtualHeight = 1024; // normal screen dimensions
     public static Viewport viewport;
     public static float viewportScale;
     public static int scrollX = 0;
-    public static string stage = "level";
+    public static string stage = "mainmenu";
     string previousStage = "mainmenu";
     public static int levelNumber = 1;
 

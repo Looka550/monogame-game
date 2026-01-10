@@ -1,0 +1,34 @@
+300 = naloge + izpit
+izpit = ~40
+naloge = 260
+----------------------
+obvezne:
+5 staticne
+5 zvoki
+5 dotiki
+5 premikanje
+25 pravila igre
+15 odzivni agenti
+20 stopnje
+5 scena
+10 najboljsi rezultati, nastavitve
+10 oblikovanje igralnosti
+----------------------
+obvezne skupno: 105
+260 - 105 = 155
+dodatne:
+15 spuscanje nevidnih objektov
+10 kamera
+15 animirane
+10 staticni (3d)
+20 animirani (3d)
+5 glasba
+10 3d zvoki
+5 rotacija
+15 detekcija trkov
+5 premikanje (3d)
+15 rotacije (3d)
+15 matematika
+10 vec naprav
+?15? hierarhicno urejena scena
+?5? stanje sveta
