@@ -1,19 +1,35 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using myGame;
 
 namespace myGame
 {
-    public class Spike : GameObject
+    public class Enemy : GameObject
     {
-        public Spike(int x, int y, int degrees)
+        public Enemy(int x, int y, string spriteName, Vector2 colliderScale)
+            : base(x, y, spriteName)
+        {
+            init(0, colliderScale);
+        }
+
+        public Enemy(int x, int y, int degrees, string spriteName)
+            : base(x, y, spriteName)
+        {
+            init(degrees, new Vector2(0.6f, 0.6f));
+        }
+
+        public Enemy(int x, int y, int degrees)
             : base(x, y, "spike")
+        {
+            init(degrees, new Vector2(0.6f, 0.6f));
+        }
+
+        void init(int degrees, Vector2 colliderScale)
         {
             rotation = degreesToRadian(degrees);
             name = "spike";
-            addCollider("circle", new Vector2(0.6f, 0.6f));
+            addCollider("circle", colliderScale);
         }
 
         public override void onCollision(GameObject other)
@@ -38,7 +54,7 @@ namespace myGame
                     textureData["height"] / 2f
                 );
 
-                Vector2 drawPos = worldPosition + origin * scale; // for rotations
+                Vector2 drawPos = worldPosition + origin * scale;
 
                 spriteBatch.Draw(
                     spritesheet,
@@ -58,6 +74,5 @@ namespace myGame
                 );
             }
         }
-
     }
 }

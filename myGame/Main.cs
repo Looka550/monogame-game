@@ -118,13 +118,16 @@ public class Main : Game
 
         PauseButton pauseButton = new PauseButton((int)(screenWidth - (128 * 1 * uiScale.X) - padding * 1), padding, uiScale.X, uiScale.Y);
         MusicButton musicButton = new MusicButton((int)(screenWidth - (128 * 2 * uiScale.X) - padding * 2), padding, uiScale.X, uiScale.Y);
-        SoundButton soundutton = new SoundButton((int)(screenWidth - (128 * 3 * uiScale.X) - padding * 3), padding, uiScale.X, uiScale.Y);
+        SoundButton soundButton = new SoundButton((int)(screenWidth - (128 * 3 * uiScale.X) - padding * 3), padding, uiScale.X, uiScale.Y);
         pauseMenu = new PauseMenu();
         pauseMenu.start();
         mainmenu = new MainMenu();
         levelsmenu = new LevelsMenu();
 
-        Spike spike = new Spike(500, 8 * 128 - 172 - 128, 270);
+        Enemy spike = new Enemy(500, 8 * 128 - 172 - 128, 270, "spike");
+        TeleportEnemy teleporter = new TeleportEnemy(new Vector2(512, 7 * 128 - 172), new Vector2(1024, 7 * 128 - 172), 2, 90);
+        OrbitingEnemy orbiter = new OrbitingEnemy(new Vector2(636, 5 * 128 - 172), 256, 1, true);
+        MovingEnemy mover = new MovingEnemy(new Vector2(512, 5 * 128 - 172), new Vector2(1024, 5 * 128 - 172), 200, 0);
 
         world.name = "world";
 
