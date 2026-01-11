@@ -144,6 +144,7 @@ namespace myGame
         public virtual void onCollision(GameObject other) { }
 
         public virtual void transformAnimatorCallback() { }
+        public virtual void framesAnimatorCallback() { }
 
         public virtual void onStageChange(string stage)
         {

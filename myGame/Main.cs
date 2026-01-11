@@ -151,8 +151,14 @@ public class Main : Game
             tile.name = $"tile2[{i}]";
         }
 
+        //Model model = Content.Load<Model>("play_button_animation_fixed");
         Model model = Content.Load<Model>("play_button_animation_fixed");
-        mainmenu = new MainMenu(model);
+        List<Model> animationFrames = new();
+        for (int i = 0; i <= 20; i++)
+        {
+            animationFrames.Add(Content.Load<Model>($"play_button_animation_frame{i}"));
+        }
+        mainmenu = new MainMenu(model, animationFrames);
     }
 
     protected override void LoadContent()
@@ -225,7 +231,10 @@ public class Main : Game
         }
 
         // technical things
-        initializationComplete = true;
+        if (!initializationComplete)
+        {
+            initializationComplete = true;
+        }
         checkCollisions();
         checkInput();
         world.UpdateTransform(); // update transforms of child objects

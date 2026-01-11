@@ -9,10 +9,20 @@ namespace myGame
 {
     public class PlayButton : GameObject
     {
+        Model originalPlayButtonModel;
         Object3D model;
+        bool alreadyAnimated = false;
         bool animating = false;
-        TransformAnimator anim;
-        public PlayButton(float x, float y, Model playButtonModel)
+        TransformAnimator transformAnim;
+        FramesAnimator framesAnim;
+
+        List<(Vector3 endTransform, int length, string transformType)> transformAnimationPipeline = new();
+        List<(List<Model> frames, int frameLength)> framesAnimationPipeline = new();
+        List<string> animationPipeline = new();
+        int animationProgress = 0;
+        int transformAnimationProgress = 0;
+        int framesAnimationProgress = 0;
+        public PlayButton(float x, float y, Model playButtonModel, List<Model> playButtonAnimationFrames)
             : base(x, y, "transparent_play_button", Color.White)
         {
             drawCondition = "mainmenu";
@@ -20,16 +30,34 @@ namespace myGame
             localPosition -= new Vector2(w / 2, h / 2); // centered
             localPosition -= new Vector2(w, 0);
 
+            originalPlayButtonModel = playButtonModel;
             model = new Object3D(playButtonModel);
             model.drawCondition = "mainmenu";
             addChild(model);
             setupModel();
+
+            transformAnimationPipeline.Add((new Vector3(0, 0, 90), 50, "rotation")); // first rotation
+            transformAnimationPipeline.Add((new Vector3(360, 0, 90), 50, "rotation")); // spin
+            transformAnimationPipeline.Add((new Vector3(-3.15f, -6.8f, 0), 50, "position")); // move down
+
+            framesAnimationPipeline.Add((playButtonAnimationFrames, 2)); // frames
+
+            animationPipeline.Add("transform:rotation");
+            animationPipeline.Add("transform:rotation");
+            animationPipeline.Add("frames");
+            animationPipeline.Add("transform:position");
+            //animationPipeline.Add("transform");
         }
 
         void setupModel()
         {
             model.position3 = new Vector3(-3.15f, 0, 0);
             model.rotation3 = new Vector3(0, 0, 180);
+            model.model = originalPlayButtonModel;
+
+            animationProgress = 0;
+            transformAnimationProgress = 0;
+            framesAnimationProgress = 0;
         }
 
         public override void onStageChange(string stage)
@@ -37,31 +65,31 @@ namespace myGame
             if (stage == "mainmenu")
             {
                 setupModel();
+                alreadyAnimated = false;
             }
-        }
-
-        public override void onKeyDown(Keys key)
-        {
-            /*
-            if (key == Keys.G)
-            {
-                model.position3.X -= 0.01f;
-            }
-            else if (key == Keys.H)
-            {
-                model.position3.X += 0.01f;
-            }
-            Console.WriteLine(model.position3.X);
-            */
         }
 
         public override void update(GameTime gameTime)
         {
             if (animating)
             {
-                Vector3 nextTransform = anim.nextTransform();
-                model.rotation3 = nextTransform;
-                Console.WriteLine($"transform: {model.rotation3}, nextTransform: {nextTransform}");
+                if (animationPipeline[animationProgress].StartsWith("transform"))
+                {
+                    if (animationPipeline[animationProgress].EndsWith("rotation"))
+                    {
+                        Vector3 nextRotation = transformAnim.nextTransform();
+                        model.rotation3 = nextRotation;
+                    }
+                    else
+                    {
+                        Vector3 nextPosition = transformAnim.nextTransform();
+                        model.position3 = nextPosition;
+                    }
+                }
+                else
+                {
+                    model.model = framesAnim.nextFrame();
+                }
             }
         }
 
@@ -69,8 +97,10 @@ namespace myGame
         {
             if (isMouseOver(mouseWorldPos))
             {
-                startAnimation();
-                //Main.stage = "level";
+                if (!alreadyAnimated)
+                {
+                    startAnimation();
+                }
             }
         }
 
@@ -78,16 +108,61 @@ namespace myGame
         {
             if (!animating)
             {
-                Console.WriteLine("animation started");
                 animating = true;
-                anim = new TransformAnimator(model.rotation3, new Vector3(model.rotation3.X, 360, model.rotation3.Z), this, 100);
+                if (animationPipeline[animationProgress].StartsWith("transform"))
+                {
+                    if (transformAnimationPipeline[transformAnimationProgress].transformType == "rotation")
+                    {
+                        transformAnim = new TransformAnimator(model.rotation3, transformAnimationPipeline[transformAnimationProgress].endTransform, this, transformAnimationPipeline[transformAnimationProgress].length, transformAnimationPipeline[transformAnimationProgress].transformType);
+                    }
+                    else
+                    {
+                        transformAnim = new TransformAnimator(model.position3, transformAnimationPipeline[transformAnimationProgress].endTransform, this, transformAnimationPipeline[transformAnimationProgress].length, transformAnimationPipeline[transformAnimationProgress].transformType);
+                    }
+                }
+                else
+                {
+                    framesAnim = new FramesAnimator(framesAnimationPipeline[framesAnimationProgress].frames, model, this, framesAnimationPipeline[framesAnimationProgress].frameLength);
+                }
+
             }
+        }
+
+        void animationsCompleted()
+        {
+            alreadyAnimated = true;
+            //Console.WriteLine("all animations completed");
+            Main.stage = "level";
         }
 
         public override void transformAnimatorCallback()
         {
-            Console.WriteLine("animation ended");
             animating = false;
+            animationProgress++;
+            transformAnimationProgress++;
+            if (animationProgress < animationPipeline.Count)
+            {
+                startAnimation();
+            }
+            else
+            {
+                animationsCompleted();
+            }
+        }
+
+        public override void framesAnimatorCallback()
+        {
+            animating = false;
+            animationProgress++;
+            framesAnimationProgress++;
+            if (animationProgress < animationPipeline.Count)
+            {
+                startAnimation();
+            }
+            else
+            {
+                animationsCompleted();
+            }
         }
 
     }

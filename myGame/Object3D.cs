@@ -10,7 +10,7 @@ namespace myGame
 {
     public class Object3D : GameObject
     {
-        Model model;
+        public Model model;
         Matrix world;
         Matrix view;
         Matrix projection;
@@ -18,6 +18,8 @@ namespace myGame
         public Vector3 rotation3;
         public Vector3 scale3;
         public Vector3 position3;
+
+        public List<Model> animationFrames;
         public Object3D(Model model)
             : base()
         {

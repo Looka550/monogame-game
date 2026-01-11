@@ -16,12 +16,14 @@ namespace myGame
         int progress = 0;
         Vector3 slice;
         Vector3 currentTransform;
-        public TransformAnimator(Vector3 A, Vector3 B, GameObject callbackObject, int length) // length = frames
+        string transformType;
+        public TransformAnimator(Vector3 A, Vector3 B, GameObject callbackObject, int length, string transformType) // length = frames
         {
             this.A = A;
             this.B = B;
             this.callbackObject = callbackObject;
             this.length = length;
+            this.transformType = transformType;
 
             slice = (B - A) / length;
             currentTransform = A;
@@ -32,7 +34,10 @@ namespace myGame
             if (progress == length - 1)
             {
                 endAnimation();
-                return strip(B);
+                if (transformType == "rotation")
+                {
+                    return strip(B);
+                }
             }
             progress++;
             currentTransform += slice;
