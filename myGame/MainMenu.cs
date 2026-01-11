@@ -22,8 +22,8 @@ namespace myGame
             );
             drawCondition = "mainmenu";
 
-            play = new PlayButton(screenCenter.X, screenCenter.Y);
-            addChild(play);
+            //play = new PlayButton(screenCenter.X, screenCenter.Y);
+            //addChild(play);
 
             levels = new LevelsButton(screenCenter.X, screenCenter.Y);
             addChild(levels);

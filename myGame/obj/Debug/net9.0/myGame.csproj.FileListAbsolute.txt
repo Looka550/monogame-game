@@ -37,3 +37,4 @@ C:\Users\Luka\Desktop\TINR\project\myGame\obj\Debug\net9.0\myGame.genruntimeconf
 C:\Users\Luka\Desktop\TINR\project\myGame\obj\Debug\net9.0\ref\myGame.dll
 C:\Users\Luka\Desktop\TINR\project\myGame\bin\Debug\net9.0\Content\font.xnb
 C:\Users\Luka\Desktop\TINR\project\myGame\obj\Debug\net9.0\myGame.sourcelink.json
+C:\Users\Luka\Desktop\TINR\project\myGame\bin\Debug\net9.0\Content\play_button_animation.xnb

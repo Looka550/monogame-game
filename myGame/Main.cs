@@ -71,6 +71,11 @@ public class Main : Game
 
     public static Texture2D debugPixel;
 
+    Model model;
+    Matrix view;
+    Matrix projection;
+    float modelRotation = 0f;
+
 
     public Main()
     {
@@ -151,6 +156,24 @@ public class Main : Game
             Tile tile = new Tile(i * 128, i * 128);
             tile.name = $"tile2[{i}]";
         }
+
+        //Model3D model = new Model3D(x, y, );
+        model = Content.Load<Model>("play_button_animation");
+        view = Matrix.CreateLookAt(
+            new Vector3(0, 0, 10),   // camera position
+            Vector3.Zero,            // look at
+            Vector3.Up
+        );
+
+        projection = Matrix.CreatePerspectiveFieldOfView(
+            MathHelper.ToRadians(45f),
+            GraphicsDevice.Viewport.AspectRatio,
+            0.1f,
+            100f
+        );
+
+
+
     }
 
     protected override void LoadContent()
@@ -167,6 +190,27 @@ public class Main : Game
 
         debugPixel = new Texture2D(GraphicsDevice, 1, 1);
         debugPixel.SetData(new[] { Color.White });
+    }
+
+    void DrawModel(Model model, Matrix world)
+    {
+        foreach (ModelMesh mesh in model.Meshes)
+        {
+            foreach (BasicEffect effect in mesh.Effects)
+            {
+                effect.EnableDefaultLighting(); // REMOVE this line
+                effect.LightingEnabled = true; // disable all lighting
+                effect.VertexColorEnabled = false; // use material color
+                //effect.DiffuseColor = new Vector3(0.1f, 0.1f, 0.1f); // solid red, or whatever you want
+                effect.EmissiveColor = new Vector3(0.2f, 0.2f, 0.3f);
+                effect.PreferPerPixelLighting = true;
+                effect.World = world;
+                effect.View = view;
+                effect.Projection = projection;
+            }
+
+            mesh.Draw();
+        }
     }
 
     protected override void Update(GameTime gameTime)
@@ -242,6 +286,30 @@ public class Main : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
+
+        // --- 3D DRAWING (NO SPRITEBATCH) ---
+        GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
+        // rotation angles in radians
+        float rotX = MathHelper.ToRadians(0f); // 90 degrees X
+        float rotY = MathHelper.ToRadians(0f); // 90 degrees Y
+        float rotZ = MathHelper.ToRadians(90f); // 90 degrees Z
+
+        // create rotation matrices
+        Matrix rotation =
+            Matrix.CreateRotationX(rotX) *
+            Matrix.CreateRotationY(rotY) *
+            Matrix.CreateRotationZ(rotZ);
+
+        // create scale and translation
+        Matrix scale = Matrix.CreateScale(0.01f);
+        Matrix translation = Matrix.CreateTranslation(new Vector3(0, 0, 0)); // move to desired position
+
+        // combine them: scale → rotate → translate
+        Matrix worldMatrix = scale * rotation * translation;
+
+        // draw the model
+        DrawModel(model, worldMatrix);
 
         Vector2 cameraPositionWorld = new Vector2(scrollX, 0);
         Matrix cameraTransformWorld =
