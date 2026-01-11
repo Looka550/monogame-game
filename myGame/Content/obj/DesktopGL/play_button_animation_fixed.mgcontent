@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>c:/Users/Luka/Desktop/TINR/project/myGame/Content/play_button_animation.fbx</SourceFile>
-  <SourceTime>2026-01-11T01:24:34.3701814+01:00</SourceTime>
-  <DestFile>c:/Users/Luka/Desktop/TINR/project/myGame/Content/bin/DesktopGL/play_button_animation.xnb</DestFile>
-  <DestTime>2026-01-11T12:06:58.4480418+01:00</DestTime>
+  <SourceFile>c:/Users/Luka/Desktop/TINR/project/myGame/Content/play_button_animation_fixed.fbx</SourceFile>
+  <SourceTime>2026-01-11T12:06:22.8926204+01:00</SourceTime>
+  <DestFile>c:/Users/Luka/Desktop/TINR/project/myGame/Content/bin/DesktopGL/play_button_animation_fixed.xnb</DestFile>
+  <DestTime>2026-01-11T12:06:58.4180959+01:00</DestTime>
   <Importer>FbxImporter</Importer>
   <ImporterTime>2025-10-20T16:25:32+02:00</ImporterTime>
   <Processor>ModelProcessor</Processor>

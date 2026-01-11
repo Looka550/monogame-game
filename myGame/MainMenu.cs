@@ -13,7 +13,7 @@ namespace myGame
         GameObject play;
         GameObject levels;
 
-        public MainMenu()
+        public MainMenu(Model playButtonModel)
             : base()
         {
             Vector2 screenCenter = new Vector2(
@@ -24,6 +24,9 @@ namespace myGame
 
             //play = new PlayButton(screenCenter.X, screenCenter.Y);
             //addChild(play);
+            play = new Object3D(playButtonModel);
+            play.drawCondition = "mainmenu";
+            addChild(play);
 
             levels = new LevelsButton(screenCenter.X, screenCenter.Y);
             addChild(levels);

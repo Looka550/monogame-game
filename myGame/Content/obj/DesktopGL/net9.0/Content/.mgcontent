@@ -6,11 +6,13 @@
   <SourceFiles>
     <File>C:/Users/Luka/Desktop/TINR/project/myGame/Content/atlas2.png</File>
     <File>C:/Users/Luka/Desktop/TINR/project/myGame/Content/font.spritefont</File>
+    <File>C:/Users/Luka/Desktop/TINR/project/myGame/Content/play_button_animation_fixed.fbx</File>
     <File>C:/Users/Luka/Desktop/TINR/project/myGame/Content/play_button_animation.fbx</File>
     <File>C:/Users/Luka/Desktop/TINR/project/myGame/Content/spritesheetTexture.png</File>
     <File>C:/Users/Luka/Desktop/TINR/project/myGame/Content/textbox.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

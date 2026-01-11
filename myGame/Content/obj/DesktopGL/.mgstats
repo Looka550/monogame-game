@@ -1,4 +1,3 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"c:/Users/Luka/Desktop/TINR/project/myGame/Content/font.spritefont","c:/Users/Luka/Desktop/TINR/project/myGame/Content/bin/DesktopGL/font.xnb","FontDescriptionProcessor","SpriteFontContent",2065,136217,0,2966931
-"c:/Users/Luka/Desktop/TINR/project/myGame/Content/play_button_animation.fbx","c:/Users/Luka/Desktop/TINR/project/myGame/Content/bin/DesktopGL/play_button_animation.xnb","ModelProcessor","ModelContent",75612,76836,0,1758466
-"c:/Users/Luka/Desktop/TINR/project/myGame/Content/spritesheetTexture.png","c:/Users/Luka/Desktop/TINR/project/myGame/Content/bin/DesktopGL/spritesheetTexture.xnb","TextureProcessor","Texture2DContent",103897,6766677,0,2768879
+"c:/Users/Luka/Desktop/TINR/project/myGame/Content/play_button_animation_fixed.fbx","c:/Users/Luka/Desktop/TINR/project/myGame/Content/bin/DesktopGL/play_button_animation_fixed.xnb","ModelProcessor","ModelContent",78348,73956,0,3031257
+"c:/Users/Luka/Desktop/TINR/project/myGame/Content/play_button_animation.fbx","c:/Users/Luka/Desktop/TINR/project/myGame/Content/bin/DesktopGL/play_button_animation.xnb","ModelProcessor","ModelContent",78348,73956,0,0255698

@@ -14,6 +14,10 @@ namespace myGame
         Matrix world;
         Matrix view;
         Matrix projection;
+
+        Vector3 rotation3;
+        Vector3 scale3;
+        Vector3 position3;
         public Object3D(Model model)
             : base()
         {
@@ -26,13 +30,16 @@ namespace myGame
             this.model = model;
             setupMatrices();
 
+            rotation3 = new Vector3(0, 0, 90);
+            position3 = new Vector3(0, 0, 0);
+            scale3 = new Vector3(0.01f, 0.01f, 0.01f);
         }
 
         void setupMatrices()
         {
             view = Matrix.CreateLookAt(
-                new Vector3(0, 0, 10),   // camera position
-                Vector3.Zero,            // look at
+                new Vector3(0, 0, 10), // camera position
+                Vector3.Zero, // look at
                 Vector3.Up
             );
 
@@ -44,41 +51,44 @@ namespace myGame
             );
         }
 
-        public override void draw(SpriteBatch spriteBatch, Texture2D spritesheet)
+        public override void update(GameTime gameTime)
         {
-            drawModel();
+            position3.X += 0.01f;
+            updateWorldMatrix();
         }
 
-        void drawModel()
+        void updateWorldMatrix()
         {
-            // rotation angles in radians
-            float rotX = MathHelper.ToRadians(0f); // 90 degrees X
-            float rotY = MathHelper.ToRadians(0f); // 90 degrees Y
-            float rotZ = MathHelper.ToRadians(90f); // 90 degrees Z
+            float rotX = MathHelper.ToRadians(rotation3.X);
+            float rotY = MathHelper.ToRadians(rotation3.Y);
+            float rotZ = MathHelper.ToRadians(rotation3.Z);
 
-            // create rotation matrices
             Matrix rotation =
                 Matrix.CreateRotationX(rotX) *
                 Matrix.CreateRotationY(rotY) *
                 Matrix.CreateRotationZ(rotZ);
 
-            // create scale and translation
-            Matrix scale = Matrix.CreateScale(0.01f);
-            Matrix translation = Matrix.CreateTranslation(new Vector3(0, 0, 0)); // move to desired position
+            Matrix scale = Matrix.CreateScale(scale3);
+            Matrix translation = Matrix.CreateTranslation(position3);
 
-            // combine them: scale → rotate → translate
             world = scale * rotation * translation;
+        }
 
-
+        public void drawModel()
+        {
+            if (drawCondition != Main.stage || !enabled)
+            {
+                return;
+            }
 
             foreach (ModelMesh mesh in model.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-                    effect.EnableDefaultLighting(); // REMOVE this line
+                    effect.EnableDefaultLighting();
                     effect.LightingEnabled = true; // disable all lighting
-                    effect.VertexColorEnabled = false; // use material color
-                    //effect.DiffuseColor = new Vector3(0.1f, 0.1f, 0.1f); // solid red, or whatever you want
+                    //effect.VertexColorEnabled = true; // use material color
+                    //effect.DiffuseColor = new Vector3(0.1f, 0.1f, 0.1f);
                     effect.EmissiveColor = new Vector3(0.2f, 0.2f, 0.3f);
                     effect.PreferPerPixelLighting = true;
                     effect.World = world;
