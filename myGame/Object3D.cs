@@ -15,9 +15,9 @@ namespace myGame
         Matrix view;
         Matrix projection;
 
-        Vector3 rotation3;
-        Vector3 scale3;
-        Vector3 position3;
+        public Vector3 rotation3;
+        public Vector3 scale3;
+        public Vector3 position3;
         public Object3D(Model model)
             : base()
         {
@@ -42,10 +42,20 @@ namespace myGame
                 Vector3.Zero, // look at
                 Vector3.Up
             );
-
+            /*
             projection = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(45f),
                 Main.viewport.AspectRatio,
+                0.1f,
+                100f
+            );
+            */
+            float width = 20f; // size of 3d objects
+            float height = width / Main.viewport.AspectRatio;
+
+            projection = Matrix.CreateOrthographic(
+                width,
+                height,
                 0.1f,
                 100f
             );
@@ -53,7 +63,6 @@ namespace myGame
 
         public override void update(GameTime gameTime)
         {
-            position3.X += 0.01f;
             updateWorldMatrix();
         }
 

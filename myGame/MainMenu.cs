@@ -22,10 +22,7 @@ namespace myGame
             );
             drawCondition = "mainmenu";
 
-            //play = new PlayButton(screenCenter.X, screenCenter.Y);
-            //addChild(play);
-            play = new Object3D(playButtonModel);
-            play.drawCondition = "mainmenu";
+            play = new PlayButton(screenCenter.X, screenCenter.Y, playButtonModel);
             addChild(play);
 
             levels = new LevelsButton(screenCenter.X, screenCenter.Y);

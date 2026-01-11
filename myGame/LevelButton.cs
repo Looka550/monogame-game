@@ -26,6 +26,7 @@ namespace myGame
             {
                 Main.stage = "level";
                 Main.levelNumber = level;
+                Console.WriteLine("clicked level in levelbutton");
             }
         }
     }

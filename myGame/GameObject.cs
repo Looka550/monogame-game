@@ -143,6 +143,13 @@ namespace myGame
 
         public virtual void onCollision(GameObject other) { }
 
+        public virtual void transformAnimatorCallback() { }
+
+        public virtual void onStageChange(string stage)
+        {
+            enabled = (drawCondition == stage);
+        }
+
         public virtual void draw(SpriteBatch spriteBatch, Texture2D spritesheet)
         {
 

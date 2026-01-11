@@ -25,5 +25,10 @@ namespace myGame
                 Main.states["paused"] = !Main.states["paused"];
             }
         }
+
+        public override void onStageChange(string stage)
+        {
+            Main.states["paused"] = false;
+        }
     }
 }

@@ -56,6 +56,7 @@ public class Main : Game
     SpriteFont uiFont;
 
     bool won = false;
+    bool initializationComplete = false;
 
     public static List<(Vector2 pos, Color color, bool ui)> debugPoints;
     public static List<(Vector2 start, Vector2 end, Color color, bool ui)> debugLines;
@@ -174,8 +175,7 @@ public class Main : Game
     {
         debugPoints = new();
         debugLines = new();
-
-        if (stage != previousStage)
+        if (stage != previousStage || !initializationComplete)
         {
             updateEnableds();
         }
@@ -225,6 +225,7 @@ public class Main : Game
         }
 
         // technical things
+        initializationComplete = true;
         checkCollisions();
         checkInput();
         world.UpdateTransform(); // update transforms of child objects
@@ -235,7 +236,7 @@ public class Main : Game
     {
         world.traverse(obj =>
         {
-            obj.enabled = (obj.drawCondition == stage);
+            obj.onStageChange(stage);
         });
     }
 
