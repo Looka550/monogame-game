@@ -53,6 +53,45 @@ namespace myGame
             return objects;
         }
 
+        List<GameObject> getBounds(int _maxX)
+        {
+            List<GameObject> objects = new();
+            Main.minX = 0;
+            Main.maxX = _maxX;
+
+            for (int i = 0; i < (int)(_maxX / 128f); i++) // floor
+            {
+                Tile tile = new Tile(i * 128, 1024 - 128);
+                tile.addCollider("border");
+                tile.name = $"floor[{i}]";
+                objects.Add(tile);
+            }
+            for (int i = 0; i < (int)(_maxX / 128f); i++) // ceiling
+            {
+                Tile tile = new Tile(i * 128, 0 - 128);
+                tile.addCollider("border");
+                tile.name = $"ceiling[{i}]";
+                objects.Add(tile);
+            }
+            for (int i = 0; i < 8; i++) // left wall
+            {
+                Tile tile = new Tile(-128, i * 128);
+                tile.addCollider("border");
+                tile.name = $"wallL[{i}]";
+                objects.Add(tile);
+            }
+            for (int i = 0; i < 8; i++) // right wall
+            {
+                Tile tile = new Tile(_maxX, i * 128);
+                tile.addCollider("border");
+                tile.name = $"wallR[{i}]";
+                objects.Add(tile);
+            }
+
+
+            return objects;
+        }
+
         List<GameObject> mainmenu()
         {
             List<GameObject> objects = new();
@@ -86,20 +125,7 @@ namespace myGame
             ball.addCollider("circle", null, true);
             objects.Add(ball);
 
-            for (int i = 0; i < 24; i++)
-            {
-                Tile tile = new Tile(i * 128, 1024 - 128);
-                tile.addCollider("border");
-                tile.name = $"floor[{i}]";
-                objects.Add(tile);
-            }
-            for (int i = 0; i < 24; i++)
-            {
-                Tile tile = new Tile(i * 128, 0 - 128);
-                tile.addCollider("border");
-                tile.name = $"ceiling[{i}]";
-                objects.Add(tile);
-            }
+            objects.AddRange(getBounds(3072));
             return objects;
         }
     }

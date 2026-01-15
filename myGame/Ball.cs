@@ -50,6 +50,7 @@ namespace myGame
 
             localPosition += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
             updateCamera();
+            Console.WriteLine(worldPosition);
         }
 
         void updateCamera()

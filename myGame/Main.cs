@@ -136,7 +136,7 @@ public class Main : Game
 
     protected override void Update(GameTime gameTime)
     {
-        if (scheduledStageChange)
+        if (scheduledStageChange) // changes stage
         {
             stage = nextStage;
             objects = levelData.fetch(stage);
