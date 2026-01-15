@@ -14,6 +14,7 @@ namespace myGame
         GameObject callbackObject;
         int frameLength;
         int progress = 0;
+        int interFrameProgress = 0;
         public FramesAnimator(List<Model> animationModels, Object3D obj, GameObject callbackObject, int frameLength) // frameLength = number of frames per animation frame
         {
             this.animationModels = animationModels;
@@ -24,12 +25,23 @@ namespace myGame
 
         public Model nextFrame()
         {
-            if (progress == animationModels.Count - 1)
+            if (progress == animationModels.Count - 1 && interFrameProgress == frameLength - 1)
             {
                 endAnimation();
             }
+
             Model next = animationModels[progress];
-            progress++;
+
+            if (interFrameProgress == frameLength - 1)
+            {
+                progress++;
+                interFrameProgress = 0;
+            }
+            else
+            {
+                interFrameProgress++;
+            }
+
             return next;
         }
 

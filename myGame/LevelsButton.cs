@@ -13,7 +13,6 @@ namespace myGame
         public LevelsButton(float x, float y)
             : base(x, y, "levels_button", Color.White)
         {
-            drawCondition = "mainmenu";
             addCollider("square");
             localPosition -= new Vector2(w / 2, h / 2); // centered
             localPosition += new Vector2(w, 0);
@@ -23,7 +22,7 @@ namespace myGame
         {
             if (isMouseOver(mouseWorldPos))
             {
-                Main.stage = "levelsmenu";
+                Main.changeStage("levelsmenu");
             }
         }
     }

@@ -28,20 +28,20 @@ namespace myGame
         {
             if (gravity)
             {
-                velocity.Y = 150f;
+                velocity.Y = 300f;
             }
             else
             {
-                velocity.Y = -150f;
+                velocity.Y = -300f;
             }
 
             if (Main.keysDown.Contains(Keys.A))
             {
-                velocity.X = -200f;
+                velocity.X = -800f;
             }
             else if (Main.keysDown.Contains(Keys.D))
             {
-                velocity.X = 200f;
+                velocity.X = 800f;
             }
             else
             {
@@ -49,6 +49,25 @@ namespace myGame
             }
 
             localPosition += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            updateCamera();
+        }
+
+        void updateCamera()
+        {
+            int screenWidth = (int)(Main.viewport.Width / Main.viewportScale);
+            float halfScreen = screenWidth / 2f;
+
+
+            Main.scrollX = (int)(worldPosition.X + (w / 2f) - halfScreen);
+
+            if (Main.scrollX < Main.minX)
+            {
+                Main.scrollX = Main.minX;
+            }
+            else if (Main.scrollX > Main.maxX - screenWidth)
+            {
+                Main.scrollX = Main.maxX - screenWidth;
+            }
         }
 
 
@@ -72,7 +91,7 @@ namespace myGame
                 texRect = new Rectangle(textureUp["x"], textureUp["y"], textureUp["width"], textureUp["height"]);
             }
 
-            if (textureUp != null && drawCondition == Main.stage && enabled)
+            if (textureUp != null && enabled)
             {
                 spriteBatch.Draw(
                     spritesheet,

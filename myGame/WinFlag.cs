@@ -36,7 +36,7 @@ namespace myGame
 
         public override void draw(SpriteBatch spriteBatch, Texture2D spritesheet)
         {
-            if (counter > 20 && animationProgress < textures.Count - 1)
+            if (counter > 10 && animationProgress < textures.Count - 1)
             {
                 animationProgress++;
                 counter = 0;
@@ -47,7 +47,7 @@ namespace myGame
                 }
             }
 
-            if (currentTexture != null && drawCondition == Main.stage && enabled)
+            if (currentTexture != null && enabled)
             {
                 spriteBatch.Draw(
                     spritesheet,

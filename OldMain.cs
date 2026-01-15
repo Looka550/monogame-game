@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,20 +23,15 @@ public class Main : Game
     public static Viewport viewport;
     public static float viewportScale;
     public static int scrollX = 0;
-    public static string stage = "level1";
-    string previousStage = "level1";
-    public static int nextLevel = 1;
+    public static string stage = "level";
+    string previousStage = "level";
+    public static int levelNumber = 1;
 
-    public static int minX = 0;
-    public static int maxX = 3072;
-
-    int screenWidth;
-    int padding;
 
     public static Texture2D atlas;
     Texture2D spritesheet;
 
-    bool debugMode = true;
+    bool debugMode = false;
 
     public static Dictionary<string, bool> states = new();
 
@@ -46,14 +41,26 @@ public class Main : Game
     MouseState previousMouse;
 
     public static SpriteLoader spriteLoader;
+    Ball ball;
+    Tile tileCol;
+    Tile tileCol2;
+    Ball ball2;
+    Ball ball3;
+    MainMenu mainmenu;
+    LevelsMenu levelsmenu;
+    PauseMenu pauseMenu;
+    PauseButton pauseButton;
+    GameObject musicOffButton;
+    GameObject musicOnButton;
 
     SpriteFont uiFont;
 
+    bool won = false;
     bool initializationComplete = false;
 
     public static List<(Vector2 pos, Color color, bool ui)> debugPoints;
     public static List<(Vector2 start, Vector2 end, Color color, bool ui)> debugLines;
-    public static GameObject world;
+    public static GameObject world = new GameObject(true);
 
     // input
     KeyboardState currentKeyboard;
@@ -64,12 +71,6 @@ public class Main : Game
     public static List<Keys> keysReleased = new List<Keys>();
 
     public static Texture2D debugPixel;
-
-    List<GameObject> objects;
-    LevelData levelData;
-
-    public static bool scheduledStageChange = false;
-    public static string nextStage;
 
 
     public Main()
@@ -96,26 +97,64 @@ public class Main : Game
 
         viewport = GraphicsDevice.Viewport;
         viewportScale = viewport.Height / (float)virtualHeight;
-        screenWidth = (int)(viewport.Width / viewportScale);
+        int screenWidth = (int)(GraphicsDevice.Viewport.Width / viewportScale);
         Vector2 uiScale = new Vector2(1.4f, 1.4f);
-        padding = 15;
+        int padding = 15;
 
+        LevelData levelData = new LevelData(screenWidth, uiScale, padding);
+        List<GameObject> objects = levelData.fetch(1);
+
+
+        //movingEnemy = new Enemy(new Vector2(400, 150), 3f, 300, 500);
+        //circularEnemy = new CircularEnemy(new Vector2(600, 150), 100f, 0.03f);
+        //teleportEnemy = new TeleportEnemy(new Vector2(200, 0), new Vector2(500, 0), 2f);
+
+        ball = new Ball(0, 0);
+        tileCol = new Tile(200, 0);
+        ball2 = new Ball(200, 350);
+        //ball2 = new Ball(200, 220);
+        //ball3 = new Ball(150, 150);
+        //ball.addChild(ball2);
+        //ball2.addChild(ball3);
+        //float x = 2216 - (128 * 1.4f) / 2 - 15;
+
+
+
+        Enemy spike = new Enemy(500, 8 * 128 - 172 - 128, 270, "spike");
+        TeleportEnemy teleporter = new TeleportEnemy(new Vector2(512, 7 * 128 - 172), new Vector2(1024, 7 * 128 - 172), 2, 90);
+        OrbitingEnemy orbiter = new OrbitingEnemy(new Vector2(636, 5 * 128 - 172), 256, 1, true);
+        MovingEnemy mover = new MovingEnemy(new Vector2(512, 5 * 128 - 172), new Vector2(1024, 5 * 128 - 172), 200, 0);
+
+        WinFlag winFlag = new WinFlag(1000, 400);
+        CheckpointFlag cf = new CheckpointFlag(500, 300);
+
+
+        world.name = "world";
+
+        ball.addCollider("circle", new Vector2(2, 2), true);
+        ball2.addCollider("circle", null, true);
+        tileCol.addCollider("border", new Vector2(2, 2));
+
+        for (int i = 0; i < 18; i++)
+        {
+            Tile tile = new Tile(i * 128, 1024 - 128);
+            tile.addCollider("border");
+            tile.name = $"tile[{i}]";
+        }
+        for (int i = 0; i < 10; i++)
+        {
+            Tile tile = new Tile(i * 128, i * 128);
+            tile.name = $"tile2[{i}]";
+        }
+
+        //Model model = Content.Load<Model>("play_button_animation_fixed");
         Model model = Content.Load<Model>("play_button_animation_fixed");
         List<Model> animationFrames = new();
         for (int i = 0; i <= 20; i++)
         {
             animationFrames.Add(Content.Load<Model>($"play_button_animation_frame{i}"));
         }
-
-        levelData = new LevelData(screenWidth, uiScale, padding, model, animationFrames);
-        objects = levelData.fetch("level1");
-
-    }
-
-    public static void changeStage(string _nextStage)
-    {
-        nextStage = _nextStage;
-        scheduledStageChange = true;
+        mainmenu = new MainMenu(model, animationFrames);
     }
 
     protected override void LoadContent()
@@ -136,14 +175,6 @@ public class Main : Game
 
     protected override void Update(GameTime gameTime)
     {
-        if (scheduledStageChange)
-        {
-            stage = nextStage;
-            objects = levelData.fetch(stage);
-            scheduledStageChange = false;
-        }
-
-
         debugPoints = new();
         debugLines = new();
         if (stage != previousStage || !initializationComplete)
@@ -177,6 +208,23 @@ public class Main : Game
                 obj.lateUpdate(gameTime);
             }
         });
+
+        if ((!states["paused"] || tileCol.ui) && tileCol.enabled)
+        {
+            //ball.localPosition += ball.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            tileCol.localPosition += new Vector2(-12f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //ball2.localPosition += new Vector2(0f, 30f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+
+        if (keysDown.Contains(Keys.V))
+        {
+            scrollX++;
+        }
+        else if (keysDown.Contains(Keys.C))
+        {
+            scrollX--;
+        }
 
         // technical things
         if (!initializationComplete)

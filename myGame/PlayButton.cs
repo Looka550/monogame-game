@@ -25,14 +25,12 @@ namespace myGame
         public PlayButton(float x, float y, Model playButtonModel, List<Model> playButtonAnimationFrames)
             : base(x, y, "transparent_play_button", Color.White)
         {
-            drawCondition = "mainmenu";
             addCollider("square");
             localPosition -= new Vector2(w / 2, h / 2); // centered
             localPosition -= new Vector2(w, 0);
 
             originalPlayButtonModel = playButtonModel;
             model = new Object3D(playButtonModel);
-            model.drawCondition = "mainmenu";
             addChild(model);
             setupModel();
 
@@ -132,7 +130,7 @@ namespace myGame
         {
             alreadyAnimated = true;
             //Console.WriteLine("all animations completed");
-            Main.stage = "level";
+            Main.changeStage($"level{Main.nextLevel}");
         }
 
         public override void transformAnimatorCallback()

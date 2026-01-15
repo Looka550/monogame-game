@@ -20,14 +20,14 @@ dodatne:
 15 spuscanje nevidnih objektov
 10 kamera
 15 animirane
-10 staticni (3d)
-20 animirani (3d)
+    10 staticni (3d)
+    20 animirani (3d)
 5 glasba
 10 3d zvoki
 5 rotacija
 15 detekcija trkov
 5 premikanje (3d)
-15 rotacije (3d)
+    15 rotacije (3d)
 15 matematika
 10 vec naprav
 ?15? hierarhicno urejena scena

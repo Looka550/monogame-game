@@ -13,7 +13,6 @@ namespace myGame
         public MenuButton(float x, float y)
             : base(x, y, "menu_button", Color.White)
         {
-            drawCondition = "level";
             addCollider("square");
             localPosition += new Vector2(0, 256);
         }
@@ -22,7 +21,7 @@ namespace myGame
         {
             if (isMouseOverUI(mouseWorldPos))
             {
-                Main.stage = "mainmenu";
+                Main.changeStage("mainmenu");
             }
         }
     }

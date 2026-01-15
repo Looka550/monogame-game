@@ -13,7 +13,6 @@ namespace myGame
         public LevelButton(float x, float y, int level)
             : base(x, y, 2, 2, $"level{level}", Color.White)
         {
-            drawCondition = "levelsmenu";
             addCollider("square");
             this.level = level;
 
@@ -24,9 +23,7 @@ namespace myGame
         {
             if (isMouseOver(mouseWorldPos))
             {
-                Main.stage = "level";
-                Main.levelNumber = level;
-                Console.WriteLine("clicked level in levelbutton");
+                Main.changeStage($"level{level}");
             }
         }
     }

@@ -87,7 +87,7 @@ namespace myGame
 
         public void drawModel()
         {
-            if (drawCondition != Main.stage || !enabled)
+            if (!enabled)
             {
                 return;
             }

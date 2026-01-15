@@ -47,7 +47,7 @@ namespace myGame
 
         public override void draw(SpriteBatch spriteBatch, Texture2D spritesheet)
         {
-            if (textureData != null && drawCondition == Main.stage && enabled)
+            if (textureData != null && enabled)
             {
                 Vector2 origin = new Vector2(
                     textureData["width"] / 2f,

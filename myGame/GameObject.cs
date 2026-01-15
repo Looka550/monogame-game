@@ -31,7 +31,6 @@ namespace myGame
 
         public string name = "GameObject";
 
-        public string drawCondition = "level";
         public bool enabled = true;
         public bool ui = false;
 
@@ -146,15 +145,12 @@ namespace myGame
         public virtual void transformAnimatorCallback() { }
         public virtual void framesAnimatorCallback() { }
 
-        public virtual void onStageChange(string stage)
-        {
-            enabled = (drawCondition == stage);
-        }
+        public virtual void onStageChange(string stage) { }
 
         public virtual void draw(SpriteBatch spriteBatch, Texture2D spritesheet)
         {
 
-            if (textureData != null && drawCondition == Main.stage && enabled)
+            if (textureData != null && enabled)
             {
                 spriteBatch.Draw(
                     spritesheet,
@@ -301,10 +297,7 @@ namespace myGame
 
         public void debugDraw(SpriteBatch spriteBatch)
         {
-            if (drawCondition == Main.stage)
-            {
-                collider?.debugDraw(spriteBatch);
-            }
+            collider?.debugDraw(spriteBatch);
         }
 
         public void destroy()

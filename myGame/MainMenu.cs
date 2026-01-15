@@ -20,7 +20,6 @@ namespace myGame
                 Main.viewport.Width / Main.viewportScale * 0.5f,
                 Main.virtualHeight * 0.5f
             );
-            drawCondition = "mainmenu";
 
             play = new PlayButton(screenCenter.X, screenCenter.Y, playButtonModel, playButtonAnimationFrames);
             addChild(play);

@@ -9,23 +9,97 @@ namespace myGame
 {
     public class LevelData
     {
-        public List<GameObject> fetch(int levelNumber)
+        int screenWidth;
+        Vector2 uiScale;
+        int padding;
+        Model model;
+        List<Model> animationFrames;
+
+        public LevelData(int screenWidth, Vector2 uiScale, int padding, Model model, List<Model> animationFrames)
         {
-            switch (levelNumber)
+            this.screenWidth = screenWidth;
+            this.uiScale = uiScale;
+            this.padding = padding;
+            this.model = model;
+            this.animationFrames = animationFrames;
+        }
+        public List<GameObject> fetch(string stage)
+        {
+            List<GameObject> objects = new();
+            Main.world = new GameObject(true);
+            Main.world.name = "world";
+
+            if (stage == "mainmenu")
             {
-                case 1:
-                    return level1();
-                default:
-                    Console.WriteLine("Invalid level number [LevelData]");
-                    return null;
+                objects.AddRange(mainmenu());
             }
+            else if (stage == "levelsmenu")
+            {
+                objects.AddRange(levelsmenu());
+            }
+            else
+            {
+                switch (stage)
+                {
+                    case "level1":
+                        objects.AddRange(level1());
+                        objects.AddRange(levelUI());
+                        break;
+                    default:
+                        Console.WriteLine("Invalid level number [LevelData]");
+                        return null;
+                }
+            }
+            return objects;
+        }
+
+        List<GameObject> mainmenu()
+        {
+            List<GameObject> objects = new();
+            objects.Add(new MainMenu(model, animationFrames));
+
+            return objects;
+        }
+
+        List<GameObject> levelsmenu()
+        {
+            List<GameObject> objects = new();
+            objects.Add(new LevelsMenu());
+
+            return objects;
+        }
+
+        List<GameObject> levelUI()
+        {
+            List<GameObject> objects = new();
+            objects.Add(new PauseButton((int)(screenWidth - (128 * 1 * uiScale.X) - padding * 1), padding, uiScale.X, uiScale.Y));
+            objects.Add(new MusicButton((int)(screenWidth - (128 * 2 * uiScale.X) - padding * 2), padding, uiScale.X, uiScale.Y));
+            objects.Add(new SoundButton((int)(screenWidth - (128 * 3 * uiScale.X) - padding * 3), padding, uiScale.X, uiScale.Y));
+            objects.Add(new PauseMenu());
+            return objects;
         }
 
         List<GameObject> level1()
         {
             List<GameObject> objects = new();
-            objects.Add(new GameObject(0, 0, 2, 2, "blank", Color.HotPink));
-            objects.Add(new GameObject(300, 250, 2, 2, "blank", Color.HotPink));
+            Ball ball = new Ball(0, 0);
+            ball.addCollider("circle", null, true);
+            objects.Add(ball);
+
+            for (int i = 0; i < 24; i++)
+            {
+                Tile tile = new Tile(i * 128, 1024 - 128);
+                tile.addCollider("border");
+                tile.name = $"floor[{i}]";
+                objects.Add(tile);
+            }
+            for (int i = 0; i < 24; i++)
+            {
+                Tile tile = new Tile(i * 128, 0 - 128);
+                tile.addCollider("border");
+                tile.name = $"ceiling[{i}]";
+                objects.Add(tile);
+            }
             return objects;
         }
     }

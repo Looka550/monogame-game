@@ -19,7 +19,6 @@ namespace myGame
                 Main.viewport.Width / Main.viewportScale * 0.5f,
                 Main.virtualHeight * 0.5f
             );
-            drawCondition = "levelsmenu";
 
             GameObject levelButton1 = new LevelButton(screenCenter.X, screenCenter.Y, 1);
             levelButton1.localPosition += new Vector2(-levelButton1.w * 2 - (levelButton1.w / 4 * 2), -levelButton1.h / 1.5f);

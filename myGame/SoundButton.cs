@@ -48,7 +48,7 @@ namespace myGame
                 texRect = new Rectangle(textureOff["x"], textureOff["y"], textureOff["width"], textureOff["height"]);
             }
 
-            if (textureOn != null && drawCondition == Main.stage && enabled)
+            if (textureOn != null && enabled)
             {
                 spriteBatch.Draw(
                     spritesheet,
