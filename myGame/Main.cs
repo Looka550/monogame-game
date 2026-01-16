@@ -23,7 +23,7 @@ public class Main : Game
     public static Viewport viewport;
     public static float viewportScale;
     public static int scrollX = 0;
-    public static string stage = "level1";
+    public static string stage = "mainmenu";
     public static int nextLevel = 1;
 
     public static int minX = 0;
@@ -68,6 +68,9 @@ public class Main : Game
     public static string nextStage;
     public static List<string> objectsClicked = new();
 
+    public static int musicValue = 50;
+    public static int soundValue = 50;
+
 
     public Main()
     {
@@ -85,6 +88,8 @@ public class Main : Game
         states["won"] = false;
         states["soundOn"] = true;
         states["musicOn"] = true;
+
+        SaveSystem.load();
 
         _graphics.PreferredBackBufferWidth = (int)resolution.X;
         _graphics.PreferredBackBufferHeight = (int)resolution.Y;
@@ -105,8 +110,15 @@ public class Main : Game
         }
 
         levelData = new LevelData(screenWidth, uiScale, padding, model, animationFrames);
-        objects = levelData.fetch("level5");
+        objects = levelData.fetch(stage);
 
+    }
+
+    protected override void OnExiting(object sender, ExitingEventArgs args)
+    {
+        Console.WriteLine("on exiting");
+        SaveSystem.save();
+        base.OnExiting(sender, args);
     }
 
     public static void changeStage(string _nextStage)
@@ -131,6 +143,7 @@ public class Main : Game
 
     protected override void Update(GameTime gameTime)
     {
+        Console.WriteLine(nextLevel);
         if (scheduledStageChange) // changes stage
         {
             if (!initializationComplete)
@@ -141,6 +154,7 @@ public class Main : Game
             objects = levelData.fetch(stage);
             scheduledStageChange = false;
             scrollX = minX;
+            states["paused"] = false;
         }
 
 

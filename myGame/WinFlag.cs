@@ -73,7 +73,16 @@ namespace myGame
 
         public void onWin()
         {
-            Console.WriteLine("win");
+            Main.nextLevel++;
+            if (Main.nextLevel > 5)
+            {
+                Main.nextLevel = 5;
+                Main.changeStage("mainmenu");
+            }
+            else
+            {
+                Main.changeStage($"level{Main.nextLevel}");
+            }
         }
     }
 }

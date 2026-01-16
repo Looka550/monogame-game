@@ -9,6 +9,7 @@ namespace myGame
 {
     public class PauseSlider : GameObject
     {
+        SliderBall ball;
 
         public PauseSlider(float x, float y, PauseMenu parent, int initValue = 0)
             : base()
@@ -26,6 +27,13 @@ namespace myGame
             sliderBall.ui = true;
             addChild(sliderBall);
             parent.elements.Add(sliderBall);
+
+            ball = sliderBall;
+        }
+
+        public int getValue()
+        {
+            return ball.value;
         }
     }
 }

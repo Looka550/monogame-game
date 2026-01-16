@@ -86,7 +86,6 @@ public class Main : Game
         base.Initialize();
 
         states["paused"] = false;
-        states["won"] = false;
         states["soundOn"] = true;
         states["musicOn"] = true;
 

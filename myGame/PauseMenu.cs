@@ -10,6 +10,8 @@ namespace myGame
     public class PauseMenu : GameObject
     {
         public List<GameObject> elements = new List<GameObject>();
+        PauseSlider sliderSound;
+        PauseSlider sliderMusic;
         public PauseMenu()
             : base()
         {
@@ -39,12 +41,12 @@ namespace myGame
             addChild(menubutton);
             elements.Add(menubutton);
 
-            PauseSlider sliderSound = new PauseSlider(screenCenter.X + 64, screenCenter.Y, this, 50);
+            sliderSound = new PauseSlider(screenCenter.X + 64, screenCenter.Y, this, Main.soundValue);
             sliderSound.localPosition -= new Vector2(0, 128);
             addChild(sliderSound);
             elements.Add(sliderSound);
 
-            PauseSlider sliderMusic = new PauseSlider(screenCenter.X + 64, screenCenter.Y, this);
+            sliderMusic = new PauseSlider(screenCenter.X + 64, screenCenter.Y, this, Main.musicValue);
             addChild(sliderMusic);
             elements.Add(sliderMusic);
 
@@ -65,6 +67,9 @@ namespace myGame
             {
                 e.enabled = Main.states["paused"];
             }
+
+            Main.soundValue = sliderSound.getValue();
+            Main.musicValue = sliderMusic.getValue();
         }
     }
 }

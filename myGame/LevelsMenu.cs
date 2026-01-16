@@ -20,26 +20,42 @@ namespace myGame
                 Main.virtualHeight * 0.5f
             );
 
-            GameObject levelButton1 = new LevelButton(screenCenter.X, screenCenter.Y, 1);
-            levelButton1.localPosition += new Vector2(-levelButton1.w * 2 - (levelButton1.w / 4 * 2), -levelButton1.h / 1.5f);
-            addChild(levelButton1);
+            GameObject levelButton1 = null;
+            if (Main.nextLevel >= 1)
+            {
+                levelButton1 = new LevelButton(screenCenter.X, screenCenter.Y, 1);
+                levelButton1.localPosition += new Vector2(-levelButton1.w * 2 - (levelButton1.w / 4 * 2), -levelButton1.h / 1.5f);
+                addChild(levelButton1);
+            }
 
-            GameObject levelButton2 = new LevelButton(screenCenter.X, screenCenter.Y, 2);
-            levelButton2.localPosition += new Vector2(-levelButton1.w - (levelButton1.w / 4), -levelButton1.h / 1.5f);
-            addChild(levelButton2);
+            if (Main.nextLevel >= 2)
+            {
+                GameObject levelButton2 = new LevelButton(screenCenter.X, screenCenter.Y, 2);
+                levelButton2.localPosition += new Vector2(-levelButton1.w - (levelButton1.w / 4), -levelButton1.h / 1.5f);
+                addChild(levelButton2);
+            }
 
-            GameObject levelButton3 = new LevelButton(screenCenter.X, screenCenter.Y, 3);
-            levelButton3.localPosition += new Vector2(0, -levelButton1.h / 1.5f);
-            addChild(levelButton3);
+            if (Main.nextLevel >= 3)
+            {
+                GameObject levelButton3 = new LevelButton(screenCenter.X, screenCenter.Y, 3);
+                levelButton3.localPosition += new Vector2(0, -levelButton1.h / 1.5f);
+                addChild(levelButton3);
+            }
 
-            GameObject levelButton4 = new LevelButton(screenCenter.X, screenCenter.Y, 4);
-            levelButton4.localPosition += new Vector2(levelButton1.w + (levelButton1.w / 4), -levelButton1.h / 1.5f);
-            addChild(levelButton4);
+            if (Main.nextLevel >= 4)
+            {
+                GameObject levelButton4 = new LevelButton(screenCenter.X, screenCenter.Y, 4);
+                levelButton4.localPosition += new Vector2(levelButton1.w + (levelButton1.w / 4), -levelButton1.h / 1.5f);
+                addChild(levelButton4);
+            }
 
-            GameObject levelButton5 = new LevelButton(screenCenter.X, screenCenter.Y, 5);
-            levelButton5.localPosition += new Vector2(levelButton1.w * 2 + (levelButton1.w / 4 * 2), -levelButton1.h / 1.5f);
-            addChild(levelButton5);
-
+            if (Main.nextLevel >= 5)
+            {
+                GameObject levelButton5 = new LevelButton(screenCenter.X, screenCenter.Y, 5);
+                levelButton5.localPosition += new Vector2(levelButton1.w * 2 + (levelButton1.w / 4 * 2), -levelButton1.h / 1.5f);
+                addChild(levelButton5);
+            }
+            /*
             GameObject levelButton6 = new LevelButton(screenCenter.X, screenCenter.Y, 6);
             addChild(levelButton6);
             levelButton6.localPosition += new Vector2(-levelButton1.w * 2 - (levelButton1.w / 4 * 2), levelButton1.h / 1.5f);
@@ -59,6 +75,7 @@ namespace myGame
             GameObject levelButton10 = new LevelButton(screenCenter.X, screenCenter.Y, 10);
             levelButton10.localPosition += new Vector2(levelButton1.w * 2 + (levelButton1.w / 4 * 2), levelButton1.h / 1.5f);
             addChild(levelButton10);
+            */
         }
     }
 }

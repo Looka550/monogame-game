@@ -64,7 +64,7 @@ namespace myGame
                         objects.AddRange(level5());
                         break;
                     default:
-                        Console.WriteLine("Invalid level number [LevelData]");
+                        Console.WriteLine("Invalid level number [LevelData]: " + stage);
                         return null;
                 }
             }

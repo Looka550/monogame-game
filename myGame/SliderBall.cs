@@ -18,6 +18,7 @@ namespace myGame
         public SliderBall(float x, float y, int initValue = 0)
             : base(x, y, "slider_ball")
         {
+            value = initValue;
             addCollider("circle", new Vector2(2, 2));
             minX = x - 150 - w / 2;
             maxX = x + 150 - w / 2;
@@ -33,6 +34,7 @@ namespace myGame
                 localPosition.X = MathHelper.Clamp(mouseX, minX, maxX);
             }
         }
+
 
         int mapValue()
         {

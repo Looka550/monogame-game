@@ -1,4 +1,4 @@
-
+1. fix weird lines around sprites
 2. only move when grounded
 2. add saving
 3. add sounds
