@@ -28,20 +28,20 @@ namespace myGame
         {
             if (gravity)
             {
-                velocity.Y = 300f;
+                velocity.Y = 500f;
             }
             else
             {
-                velocity.Y = -300f;
+                velocity.Y = -500f;
             }
 
             if (Main.keysDown.Contains(Keys.A))
             {
-                velocity.X = -800f;
+                velocity.X = -500f;
             }
             else if (Main.keysDown.Contains(Keys.D))
             {
-                velocity.X = 800f;
+                velocity.X = 500f;
             }
             else
             {
@@ -50,7 +50,6 @@ namespace myGame
 
             localPosition += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
             updateCamera();
-            Console.WriteLine(worldPosition);
         }
 
         void updateCamera()

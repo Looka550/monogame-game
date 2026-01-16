@@ -24,7 +24,6 @@ public class Main : Game
     public static float viewportScale;
     public static int scrollX = 0;
     public static string stage = "level1";
-    string previousStage = "level1";
     public static int nextLevel = 1;
 
     public static int minX = 0;
@@ -33,14 +32,11 @@ public class Main : Game
     int screenWidth;
     int padding;
 
-    public static Texture2D atlas;
     Texture2D spritesheet;
 
-    bool debugMode = true;
+    bool debugMode = false;
 
     public static Dictionary<string, bool> states = new();
-
-    Texture2D textbox;
 
     MouseState currentMouse;
     MouseState previousMouse;
@@ -108,7 +104,7 @@ public class Main : Game
         }
 
         levelData = new LevelData(screenWidth, uiScale, padding, model, animationFrames);
-        objects = levelData.fetch("level1");
+        objects = levelData.fetch("level5");
 
     }
 
@@ -123,9 +119,7 @@ public class Main : Game
         spriteBatchWorld = new SpriteBatch(GraphicsDevice);
         spriteBatchUI = new SpriteBatch(GraphicsDevice);
 
-        atlas = Content.Load<Texture2D>("atlas2");
         spritesheet = Content.Load<Texture2D>("spritesheetTexture");
-        textbox = Content.Load<Texture2D>("textbox");
         uiFont = Content.Load<SpriteFont>("font");
 
         spriteLoader = new SpriteLoader();
@@ -138,20 +132,19 @@ public class Main : Game
     {
         if (scheduledStageChange) // changes stage
         {
+            if (!initializationComplete)
+            {
+                updateEnableds();
+            }
             stage = nextStage;
             objects = levelData.fetch(stage);
             scheduledStageChange = false;
+            scrollX = minX;
         }
 
 
         debugPoints = new();
         debugLines = new();
-        if (stage != previousStage || !initializationComplete)
-        {
-            updateEnableds();
-        }
-        previousStage = stage;
-
 
         world.traverse(obj => // calling start
         {
