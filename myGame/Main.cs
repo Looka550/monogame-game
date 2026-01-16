@@ -34,7 +34,7 @@ public class Main : Game
 
     Texture2D spritesheet;
 
-    bool debugMode = false;
+    bool debugMode = true;
 
     public static Dictionary<string, bool> states = new();
 
@@ -66,6 +66,7 @@ public class Main : Game
 
     public static bool scheduledStageChange = false;
     public static string nextStage;
+    public static List<string> objectsClicked = new();
 
 
     public Main()
@@ -424,6 +425,7 @@ public class Main : Game
 
     void checkMouseInput()
     {
+        objectsClicked = new();
         Vector2 mouseWorldPos = getMouseWorldPosition();
         // left
         if (currentMouse.LeftButton == ButtonState.Pressed) // mouse down

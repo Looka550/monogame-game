@@ -9,27 +9,12 @@ namespace myGame
 {
     public class Tile : GameObject
     {
-        public Vector2 velocity;
         static Random rnd = new Random();
 
         public Tile(float x, float y)
             : base(x, y, "tile", new Color(245 + rnd.Next(-20, 10), 245 + rnd.Next(-20, 10), 245 + rnd.Next(-20, 10)))
         {
             name = "tile";
-            velocity = new Vector2(120f, 0f);
-        }
-
-        public override void onCollision(GameObject other)
-        {
-
-        }
-
-        public override void onMouseClicked(MouseState mouse, Vector2 mouseWorldPos)
-        {
-            if (isMouseOver(mouseWorldPos))
-            {
-
-            }
         }
     }
 }

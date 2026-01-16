@@ -32,6 +32,7 @@ namespace myGame
         {
             if (isMouseOverUI(mouseWorldPos))
             {
+                Main.objectsClicked.Add("music button");
                 musicOn = !musicOn;
                 Main.states["musicOn"] = musicOn;
             }

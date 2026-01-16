@@ -22,6 +22,7 @@ namespace myGame
         {
             if (isMouseOver(mouseWorldPos))
             {
+                Main.objectsClicked.Add("levels menu button");
                 Main.changeStage("levelsmenu");
             }
         }

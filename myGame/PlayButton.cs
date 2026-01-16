@@ -95,6 +95,7 @@ namespace myGame
         {
             if (isMouseOver(mouseWorldPos))
             {
+                Main.objectsClicked.Add("play button");
                 if (!alreadyAnimated)
                 {
                     startAnimation();

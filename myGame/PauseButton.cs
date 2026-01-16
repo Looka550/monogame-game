@@ -22,6 +22,7 @@ namespace myGame
         {
             if (isMouseOverUI(mouseWorldPos))
             {
+                Main.objectsClicked.Add("pause button");
                 Main.states["paused"] = !Main.states["paused"];
             }
         }

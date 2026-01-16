@@ -21,6 +21,7 @@ namespace myGame
         {
             if (isMouseOverUI(mouseWorldPos))
             {
+                Main.objectsClicked.Add("main menu button");
                 Main.changeStage("mainmenu");
             }
         }

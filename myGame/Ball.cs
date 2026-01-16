@@ -45,11 +45,16 @@ namespace myGame
             }
             else
             {
-                velocity.X = 0f;
+                velocity.X = 0;
             }
 
             localPosition += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
             updateCamera();
+
+            if (Main.objectsClicked.Contains("screen") && Main.objectsClicked.Count == 1) // only screen was clicked
+            {
+                gravity = !gravity;
+            }
         }
 
         void updateCamera()
@@ -73,9 +78,16 @@ namespace myGame
 
         public override void onMouseClicked(MouseState mouse, Vector2 mouseWorldPos)
         {
-            if (isMouseOver(mouseWorldPos) && !Main.states["paused"])
+            if (!Main.states["paused"])
             {
-                gravity = !gravity;
+                Vector2 m = mouseWorldPos;
+                int screenWidth = (int)(Main.viewport.Width / Main.viewportScale);
+                if (m.X > screenWidth || m.X < 0 || m.Y > 1024 || m.Y < 0)
+                {
+                    return;
+                }
+
+                Main.objectsClicked.Add("screen");
             }
         }
 

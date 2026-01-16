@@ -14,6 +14,7 @@ namespace myGame
         int padding;
         Model model;
         List<Model> animationFrames;
+        Ball ball;
 
         public LevelData(int screenWidth, Vector2 uiScale, int padding, Model model, List<Model> animationFrames)
         {
@@ -39,27 +40,28 @@ namespace myGame
             }
             else
             {
+                Ball ball = new Ball(0, 0);
+                ball.addCollider("circle", null, true);
+                objects.Add(ball);
+                this.ball = ball;
+                objects.AddRange(levelUI());
+
                 switch (stage)
                 {
                     case "level1":
                         objects.AddRange(level1());
-                        objects.AddRange(levelUI());
                         break;
                     case "level2":
                         objects.AddRange(level2());
-                        objects.AddRange(levelUI());
                         break;
                     case "level3":
                         objects.AddRange(level3());
-                        objects.AddRange(levelUI());
                         break;
                     case "level4":
                         objects.AddRange(level4());
-                        objects.AddRange(levelUI());
                         break;
                     case "level5":
                         objects.AddRange(level5());
-                        objects.AddRange(levelUI());
                         break;
                     default:
                         Console.WriteLine("Invalid level number [LevelData]");
@@ -126,6 +128,11 @@ namespace myGame
         List<GameObject> levelUI()
         {
             List<GameObject> objects = new();
+            //objects.Add(new MoveButton(padding, 1024 - (224 * uiScale.Y) - padding * 2, uiScale.X, uiScale.Y, "left"));
+            //objects.Add(new MoveButton(padding + 128 * uiScale.X, 1024 - (224 * uiScale.Y) - padding * 2, uiScale.X, uiScale.Y, "right"));
+            objects.Add(new MoveButton(screenWidth - 2 * padding - 108 * uiScale.X, 1024 - (224 * uiScale.Y) - padding * 2, uiScale.X, uiScale.Y, "right", this.ball));
+            objects.Add(new MoveButton(screenWidth - 4 * padding - 2 * 108 * uiScale.X, 1024 - (224 * uiScale.Y) - padding * 2, uiScale.X, uiScale.Y, "left", this.ball));
+
             objects.Add(new PauseButton((int)(screenWidth - (128 * 1 * uiScale.X) - padding * 1), padding, uiScale.X, uiScale.Y));
             objects.Add(new MusicButton((int)(screenWidth - (128 * 2 * uiScale.X) - padding * 2), padding, uiScale.X, uiScale.Y));
             objects.Add(new SoundButton((int)(screenWidth - (128 * 3 * uiScale.X) - padding * 3), padding, uiScale.X, uiScale.Y));
@@ -136,9 +143,6 @@ namespace myGame
         List<GameObject> level1()
         {
             List<GameObject> objects = new();
-            Ball ball = new Ball(0, 0);
-            ball.addCollider("circle", null, true);
-            objects.Add(ball);
             objects.Add(new WinFlag(2024, 672));
 
             objects.Add(new Enemy(4 * 128, 8 * 128 - 172 - 128, 0, "spike"));
@@ -158,9 +162,6 @@ namespace myGame
         List<GameObject> level2()
         {
             List<GameObject> objects = new();
-            Ball ball = new Ball(0, 0);
-            ball.addCollider("circle", null, true);
-            objects.Add(ball);
             objects.Add(new WinFlag(2024 - 128 * 6, 672));
 
             for (int i = 0; i < 6; i++) // col
@@ -204,9 +205,6 @@ namespace myGame
         List<GameObject> level3()
         {
             List<GameObject> objects = new();
-            Ball ball = new Ball(0, 0);
-            ball.addCollider("circle", null, true);
-            objects.Add(ball);
             objects.Add(new WinFlag(24 * 128, 672));
 
             for (int i = 0; i < 5; i++) // col
@@ -255,9 +253,6 @@ namespace myGame
         List<GameObject> level4()
         {
             List<GameObject> objects = new();
-            Ball ball = new Ball(0, 0);
-            ball.addCollider("circle", null, true);
-            objects.Add(ball);
             objects.Add(new WinFlag(33 * 128, 672));
 
             for (int i = 0; i < 5; i++) // col
@@ -288,10 +283,6 @@ namespace myGame
         List<GameObject> level5()
         {
             List<GameObject> objects = new();
-
-            Ball ball = new Ball(0, 0);
-            ball.addCollider("circle", null, true);
-            objects.Add(ball);
 
             // section 1 - warm up
             for (int i = 4; i < 11; i++)

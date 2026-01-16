@@ -1,3 +1,9 @@
-1. make levels
+
+2. only move when grounded
 2. add saving
 3. add sounds
+
+
+in the end:
+- delete else{ velocity = 0} from ball
+- fix multiple touches at once on the screen;

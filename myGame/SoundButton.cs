@@ -32,6 +32,7 @@ namespace myGame
         {
             if (isMouseOverUI(mouseWorldPos))
             {
+                Main.objectsClicked.Add("sound button");
                 soundOn = !soundOn;
                 Main.states["soundOn"] = soundOn;
             }

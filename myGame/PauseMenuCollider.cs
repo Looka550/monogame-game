@@ -21,6 +21,7 @@ namespace myGame
         {
             if (isMouseOver(mouseWorldPos))
             {
+                Main.objectsClicked.Add("pause menu collider");
                 Main.states["paused"] = false;
             }
         }
